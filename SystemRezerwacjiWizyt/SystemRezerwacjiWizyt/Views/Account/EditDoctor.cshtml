@@ -1,4 +1,5 @@
-﻿@model SystemRezerwacjiWizyt.Models.EditDoctorViewModel
+﻿@using System.Activities.Statements
+@model SystemRezerwacjiWizyt.Models.EditDoctorViewModel
 
 @{
     ViewBag.Title = "EditDoctor";
@@ -38,8 +39,13 @@
 
         </div>
         <div>
-            @Html.HiddenFor(model => model.doc.Specialization, new { htmlAttributes = new { @class = "form-control" } })
-        </div>
+           @for (int i = 0; i < Model.doc.Specialization.Count(); i++)
+           {
+            <tr>
+                <td>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</td>@Html.HiddenFor(m => m.doc.Specialization[i].Name)
+            </tr>
+           }
+         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.doc.User.Mail, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -48,14 +54,7 @@
             </div>
         </div>
         
-        <div class="form-group">
-            <ul>
-                @foreach (var a in Model.doc.Specialization)
-                {
-                    <li>@a.Name.ToString()</li>
-                }
-            </ul>
-        </div>
+     
         <div class="form-group">
             @Html.LabelFor(model => model.doc.MondayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

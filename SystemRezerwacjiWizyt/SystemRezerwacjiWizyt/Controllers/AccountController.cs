@@ -119,8 +119,69 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        public ActionResult Register(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+        public ActionResult RegisterPatient(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
 
-       
+        public ActionResult RegisterDoctor(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterPatient(RegisterUserVievModel model, string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            db.BeginTransaction();
+            Patient d= new Patient();
+            d.User=new User();
+            d.User.Name = model.Name;
+            d.User.Kind=DocOrPat.Patient;
+            d.User.Mail = model.Mail;
+            d.User.PESEL = model.PESEL;
+            d.User.Password = SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.Password);
+            db.Patients.Add(d);
+            db.Commit();
+            var usr = db.Patients.Select(p => p).First(p => p.User.PESEL == model.PESEL);
+            Session["User"] = usr;
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            db.BeginTransaction();
+            Doctor d = new Doctor();
+            d.User = new User();
+            d.User.Name = model.Name;
+            d.User.Kind = DocOrPat.Patient;
+            d.User.Mail = model.Mail;
+            d.User.PESEL = model.PESEL;
+            d.User.Password = SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.Password);
+            d.Specialization = model.Specialization;
+            d.FridayWorkingTime = model.FridayWorkingTime;
+            d.MondayWorkingTime = model.MondayWorkingTime;
+            d.ThursdayWorkingTime = model.ThursdayWorkingTime;
+            d.TuesdayWorkingTime = model.TuesdayWorkingTime;
+            d.WednesdayWorkingTime = model.WednesdayWorkingTime;
+
+            db.Doctors.Add(d);
+            db.Commit();
+            var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == model.PESEL);
+            Session["User"] = usr;
+            return RedirectToAction("Index", "Home");
+        }
         //private void SignInAsync(string name)
         //{
         //    var claims = new List<Claim>();

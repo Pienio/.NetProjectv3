@@ -35,4 +35,53 @@ namespace SystemRezerwacjiWizyt.Models
         public string password { get; set; }
 
     }
+
+    public class RegisterUserVievModel
+    {
+        [Required]
+        
+        public string PESEL { get; set; }
+        [Required]
+        
+        public string Password { get; set; }
+
+        [Required]
+
+        public string PasswordAgain { get; set; }
+        [Required]
+       
+        public virtual PersonName Name { get; set; } = new PersonName();
+        [Required]
+      
+        public DocOrPat Kind { get; set; }
+        [Required]
+      
+        public bool Active { get; set; } = true;
+        [Required]
+     
+        public string Mail { get; set; }
+
+    }
+
+    public class RegisterDoctorViewModel : RegisterUserVievModel
+    {
+        [Required]
+        
+        public virtual IList<Specialization> Specialization { get; set; } = new List<Specialization>();
+        
+        public bool ProfileAccepted { get; set; } = false;
+
+     
+        public WorkingTime MondayWorkingTime { get; set; }
+
+     
+        public WorkingTime TuesdayWorkingTime { get; set; }
+    
+        public WorkingTime WednesdayWorkingTime { get; set; }
+ 
+        public WorkingTime ThursdayWorkingTime { get; set; }
+
+        public WorkingTime FridayWorkingTime { get; set; }
+
+    }
 }
