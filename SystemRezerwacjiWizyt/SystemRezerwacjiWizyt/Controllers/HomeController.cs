@@ -1,30 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DatabaseAccess;
 
 namespace SystemRezerwacjiWizyt.Controllers
 {
     public class HomeController : Controller
     {
+        private ITransactionalApplicationData db = new ApplicationDataFactory().CreateTransactionalApplicationData(false);
+
         public ActionResult Index()
-        {
-            return View();
+        {   
+            db.Fill();
+            var a = db.Doctors.Select(p => p).Where(p => p.ProfileAccepted && p.User.Active).ToList();
+            return View(a);
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+       
     }
 }

@@ -27,11 +27,11 @@ namespace DatabaseAccess.Model
 
         public ApplicationData(bool runTransaction) : base("SysRejWiz")
         {
+            
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ApplicationData>());
-
-            Configuration.ProxyCreationEnabled = false;
-            var objectContext = ((IObjectContextAdapter)this).ObjectContext;
-            objectContext.ContextOptions.LazyLoadingEnabled = false;
+          //  Configuration.ProxyCreationEnabled = false;
+         //   var objectContext = ((IObjectContextAdapter)this).ObjectContext;
+           // objectContext.ContextOptions.LazyLoadingEnabled = false;
             var x = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
             if (runTransaction)
             {
@@ -39,6 +39,8 @@ namespace DatabaseAccess.Model
                 IsTransactionRunning = true;
             }
         }
+
+      
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

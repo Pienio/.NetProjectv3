@@ -27,7 +27,7 @@ namespace DatabaseAccess
         bool IsTransactionRunning { get; }
         bool CommitUnfinishedTransaction { get; set; }
         bool ToCommit { get; set; }
-
+        
         void BeginTransaction();
         void Commit();
         void Rollback();
