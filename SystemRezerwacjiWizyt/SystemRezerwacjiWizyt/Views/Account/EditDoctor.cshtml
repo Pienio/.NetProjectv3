@@ -1,129 +1,247 @@
 ﻿@using System.Activities.Statements
+@using DatabaseAccess.Model
 @model SystemRezerwacjiWizyt.Models.EditDoctorViewModel
 
 @{
     ViewBag.Title = "EditDoctor";
+    var Speclist = Model.SpecToChoose;
+    var DocSpecList = Model.doc.Specialization;
 }
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    @*<script>
+        $("#addItem").click(function () {
+            $.ajax({
+                url: this.href,
+                cache: false,
+                success: function (html) { $("#editorRows").append(html); }
+            });
+            return false;
+        });
+    </script>*@
+    <script type="text/javascript">
+        
+    </script>
+        @*function changeText2() {
 
-<h2>EditDoctor</h2>
+            //   var firstname = document.getElementById('firstname').value;
+            var e = document.getElementById("Spec");
+            var strUser =  e.options[e.selectedIndex].text;
+            //  document.getElementById('boldStuff2').innerHTML = strUser;
+            var node = document.createElement("LI");
+            var list = document.getElementById("Specs");
+
+            if (strUser !== "Choose...") {
+
+
+                var flag = false;
+                var items = list.getElementsByTagName("LI");
+
+                for (var i = 0; i < items.length; i++) {
+
+                    var open = items[i].innerHTML;
+
+                    if (items[i].innerHTML.toString() === strUser.toString()) {
+                        flag = true;
+
+                    }
+
+                }
+                if (!flag) {
+                    var textnode = document.createTextNode(strUser);
+                    
+                  
+                   
+                    node.appendChild(textnode);
+                    list.appendChild(node);
+                }
+              
+            }
+
+        }
+
+        function postSortOrder() {
+            $.ajax({
+                data: {
+                    selectedSpecs: $('#Specs li').get(),
+             
+                },
+                type: 'POST'
+            });
+        }
+    </script>*@
+
+</head>
+
+@*First name: <input type="text" id="firstname"><br>
+<p>Your first name is: <b id='boldStuff2'></b> </p>
+<p> Other people's names: </p>
+
+<ol id="demo"></ol>
+
+
+<input type='button' onclick='changeText2()' value='Submit' />*@
+
+    
+@ViewBag.Mess
 
 @using (Html.BeginForm())
 {
+
     @Html.AntiForgeryToken()
-    
+    <ol id="demo"></ol>
     <div class="form-horizontal">
         <h4>EditDoctorViewModel</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-       
+        <hr/>
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
         <div class="form-group">
-            @Html.LabelFor(model => model.doc.User.Name.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.doc.User.Name.Name, htmlAttributes: new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.User.Name.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.User.Name.Name, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.doc.User.Name.Name, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.User.Name.Name, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.doc.User.Name.Surname, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.doc.User.Name.Surname, htmlAttributes: new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.User.Name.Surname, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.User.Name.Surname, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.doc.User.Name.Surname, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.User.Name.Surname, "", new {@class = "text-danger"})
             </div>
         </div>
         <div>
-            @Html.HiddenFor(model => model.doc.User.PESEL, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.HiddenFor(model => model.doc.User.PESEL, new {htmlAttributes = new {@class = "form-control"}})
 
         </div>
         <div>
-            @Html.HiddenFor(model => model.doc.User.Password, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.HiddenFor(model => model.doc.User.Password, new {htmlAttributes = new {@class = "form-control"}})
 
         </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SpecId, "Customer Name")
+        </div>
         <div>
-           @for (int i = 0; i < Model.doc.Specialization.Count(); i++)
-           {
-            <tr>
-                <td>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</td>@Html.HiddenFor(m => m.doc.Specialization[i].Name)
-            </tr>
-           }
-         </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.doc.User.Mail, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.User.Mail, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.User.Mail, "", new { @class = "text-danger" })
-            </div>
+
+            @Html.DropDownListFor(model=>model.SpecId, new SelectList(Speclist, "Key", "Name"), "Choose... ");
+            @*@for (int i = 0; i < Model.SpecToChoose.Count(); i++)
+            {
+
+                @*<li>@Html.DisplayTextFor(m => m.SpecToChoose[i].Name)</li>
+                @Html.HiddenFor(m => m.SpecToChoose[i].Name)
+                //{
+                //    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", Model.doc.Specialization[i]);
+                //}
+
+            }*@
+
+            <input type="submit" value="Dodaj" class="btn btn-default" />
         </div>
-        
-     
-        <div class="form-group">
-            @Html.LabelFor(model => model.doc.MondayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.MondayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model=> model.doc.MondayWorkingTime.Start, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.MondayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.MondayWorkingTime.End, "", new { @class = "text-danger" })
-            </div>
+        <div id="editorRows">
+            @*@foreach (var a in Model.doc.Specialization)
+            {
+                {
+                    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", a);
+                }
+            }
+           @Html.ActionLink("Add another...", "BlankEditorRow", null, new { id = "addItem"})*@
         </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.doc.TuesdayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.TuesdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.TuesdayWorkingTime.Start, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.TuesdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.TuesdayWorkingTime.End, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.doc.WednesdayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.WednesdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.WednesdayWorkingTime.Start, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.WednesdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.WednesdayWorkingTime.End, "", new { @class = "text-danger" })
-            </div>
+        <div>
+            @Html.ListBoxFor(model=>model.SelectedSpec,new SelectList(DocSpecList, "Key", "Name"),new {size = @DocSpecList.Count})
+            <input type="submit" value="Usuń" class="btn btn-default" />
+            <ul id="Specs">
+                @for (int i = 0; i < Model.doc.Specialization.Count(); i++)
+                {
+
+                    <li>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</li>
+                    @*<li><input type="submit" value="Delete" class="btn btn-default"/></li>*@
+                    @Html.HiddenFor(m => m.doc.Specialization[i].Name)
+                    //{
+                    //    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", Model.doc.Specialization[i]);
+                    //}
+
+                }
+
+
+
+            </ul>
+
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.doc.ThursdayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.doc.User.Mail, htmlAttributes: new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.ThursdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.ThursdayWorkingTime.Start, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.ThursdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.ThursdayWorkingTime.End, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.doc.User.Mail, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.User.Mail, "", new {@class = "text-danger"})
             </div>
         </div>
+
+
         <div class="form-group">
-            @Html.LabelFor(model => model.doc.FridayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.doc.MondayWorkingTime, htmlAttributes: new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.FridayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.FridayWorkingTime.Start, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.doc.MondayWorkingTime.Start, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.MondayWorkingTime.Start, "", new {@class = "text-danger"})
             </div>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.doc.FridayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.doc.FridayWorkingTime.End, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.doc.MondayWorkingTime.End, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.MondayWorkingTime.End, "", new {@class = "text-danger"})
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.password, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.doc.TuesdayWorkingTime, htmlAttributes: new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.doc.TuesdayWorkingTime.Start, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.TuesdayWorkingTime.Start, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.doc.TuesdayWorkingTime.End, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.TuesdayWorkingTime.End, "", new {@class = "text-danger"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.doc.WednesdayWorkingTime, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.doc.WednesdayWorkingTime.Start, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.WednesdayWorkingTime.Start, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.doc.WednesdayWorkingTime.End, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.WednesdayWorkingTime.End, "", new {@class = "text-danger"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.doc.ThursdayWorkingTime, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.doc.ThursdayWorkingTime.Start, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.ThursdayWorkingTime.Start, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.doc.ThursdayWorkingTime.End, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.ThursdayWorkingTime.End, "", new {@class = "text-danger"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.doc.FridayWorkingTime, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.doc.FridayWorkingTime.Start, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.FridayWorkingTime.Start, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.doc.FridayWorkingTime.End, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.doc.FridayWorkingTime.End, "", new {@class = "text-danger"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.password, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.password, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.password, "", new {@class = "text-danger"})
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default"/>
             </div>
         </div>
     </div>
 }
-
-

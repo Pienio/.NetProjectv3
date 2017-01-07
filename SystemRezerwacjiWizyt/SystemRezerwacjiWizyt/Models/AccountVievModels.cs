@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using DatabaseAccess.Model;
 
 namespace SystemRezerwacjiWizyt.Models
@@ -34,6 +35,12 @@ namespace SystemRezerwacjiWizyt.Models
         [DataType(DataType.Password)]
         public string password { get; set; }
 
+        public List<Specialization> SpecToChoose { get; set; }
+
+        public int SpecId { get; set; }
+
+        public IEnumerable<string> SelectedSpec { get; set; }
+
     }
 
     public class RegisterUserVievModel
@@ -60,6 +67,7 @@ namespace SystemRezerwacjiWizyt.Models
         [Required]
      
         public string Mail { get; set; }
+        
 
     }
 
@@ -67,8 +75,10 @@ namespace SystemRezerwacjiWizyt.Models
     {
         [Required]
         
+
         public virtual IList<Specialization> Specialization { get; set; } = new List<Specialization>();
-        
+
+        public List<Specialization> SpecToChoose { get; set; }
         public bool ProfileAccepted { get; set; } = false;
 
      
@@ -83,5 +93,8 @@ namespace SystemRezerwacjiWizyt.Models
 
         public WorkingTime FridayWorkingTime { get; set; }
 
+        public int SpecId { get; set; }
+
+        public IEnumerable<SelectListItem> SelectedSpec { get; set; }
     }
 }

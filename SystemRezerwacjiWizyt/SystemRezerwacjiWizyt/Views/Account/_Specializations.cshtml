@@ -1,0 +1,10 @@
+﻿@model DatabaseAccess.Model.Specialization
+
+<div>
+
+  @using (Html.BeginCollectionItem("Specs"))
+  {
+      @Html.Label(Model.Name);
+
+  }
+</div>

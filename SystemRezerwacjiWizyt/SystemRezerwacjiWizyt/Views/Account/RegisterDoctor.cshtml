@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "RegisterDoctor";
+    var Speclist = Model.SpecToChoose;
 }
 
 <h2>RegisterDoctor</h2>
@@ -59,6 +60,12 @@
                 </div>
             </div>
         </div>
+        
+        <div>
+            @Html.DropDownList("SelectedSpec", new SelectList(Speclist, "Key", "Name") as SelectList, "Choose... ");
+            <button id="Add">Dodaj</button>
+        </div>
+        
 
         <div class="form-group">
             @Html.LabelFor(model => model.Mail, htmlAttributes: new { @class = "control-label col-md-2" })

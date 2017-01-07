@@ -80,6 +80,7 @@ namespace SystemRezerwacjiWizyt.Controllers
         }
         public ActionResult EditDoctor(string returnUrl)
         {
+           
             ViewBag.ReturnUrl = returnUrl;
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Home");
@@ -88,16 +89,73 @@ namespace SystemRezerwacjiWizyt.Controllers
             b.doc = new Doctor();
             b.password = "";
             b.doc.CopyFrom(a);
-            
+            b.SpecToChoose = db.Specializations.Select(p => p).ToList();
 
             return View(b);
         }
+       
         [HttpPost]     
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditDoctor(EditDoctorViewModel model, string returnUrl)
+        public async Task<ActionResult> EditDoctor(EditDoctorViewModel model, string returnUrl,string Del )
         {
+
+            //if (Request.Form["SpecId"] != null)
+            //{
+            //    string spc = Request.Form["SpecId"].ToString();
+            //    model.SpecId = Int32.Parse(spc);
+            //}
+            //else
+            //{
+            //    model.SpecId = 0;
+            //}
+          
             ViewBag.ReturnUrl = returnUrl;
-            if(Session["User"] == null)
+            if (model.SpecId != 0)
+            {
+                Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
+
+                var abc = model.doc.Specialization.Select(p => p).Where(p => p.Name == toad.Name);
+                if (abc.Count() == 0)
+                {
+                   // Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
+                    model.doc.Specialization.Add(toad);
+                    
+                }
+                else
+                {
+                    ViewBag.Mess = "Nie możesz dodać dwóch takich samych specjalizacji";
+                }
+                
+               
+                model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+                model.password = "";
+                model.SpecId = 0;
+                //Request.Form["SpecId"] = "";
+                return View(model);
+                //return RedirectToAction("EditDoctor", "Account", model);
+
+            }
+            if (model.SelectedSpec != null)
+            {
+                if (model.SelectedSpec.Count() != model.doc.Specialization.Count)
+                {
+                    
+               
+                foreach (var VARIABLE in model.SelectedSpec)
+                {
+                    int key = Int32.Parse(VARIABLE);
+                    var todel = db.Specializations.Find(key);
+                    var todel1 = model.doc.Specialization.Select(p => p).Where(p => p.Name == todel.Name).First();
+                    model.doc.Specialization.Remove(todel1);
+                }
+                }
+                model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+                model.password = "";
+                //Request.Form["SpecId"] = "";
+                return View(model);
+            }
+
+            if (Session["User"] == null)
                 return RedirectToAction("Index", "Home");
             Doctor a = Session["User"] as Doctor;
             if (string.IsNullOrEmpty(model.password)||a.User.Password != SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.password))
@@ -109,6 +167,13 @@ namespace SystemRezerwacjiWizyt.Controllers
             var k = db.Doctors.Select(p=>p).First(p => p.Key==a.Key);
        
             k.CopyFrom(model.doc);
+            List<Specialization> nowa = new List<Specialization>();
+            foreach (var VARIABLE in model.doc.Specialization)
+            {
+                var tad = db.Specializations.Select(p => p).Where(p => p.Name == VARIABLE.Name).First();
+                nowa.Add(tad);
+            }
+            k.Specialization = nowa;
             //db.SetEntryToModified(k);
             //  var manager = ((IObjectContextAdapter)db).ObjectContext.ObjectStateManager;
 
@@ -133,7 +198,9 @@ namespace SystemRezerwacjiWizyt.Controllers
         public ActionResult RegisterDoctor(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            var b = new RegisterDoctorViewModel();
+            b.SpecToChoose = db.Specializations.Select(p => p).ToList();
+            return View(b);
         }
 
         [HttpPost]
@@ -158,9 +225,11 @@ namespace SystemRezerwacjiWizyt.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl)
+        public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl )
         {
             ViewBag.ReturnUrl = returnUrl;
+            string spectoadd = Request.Form["selectedSpecs"].ToString();
+                
             db.BeginTransaction();
             Doctor d = new Doctor();
             d.User = new User();
@@ -175,12 +244,24 @@ namespace SystemRezerwacjiWizyt.Controllers
             d.ThursdayWorkingTime = model.ThursdayWorkingTime;
             d.TuesdayWorkingTime = model.TuesdayWorkingTime;
             d.WednesdayWorkingTime = model.WednesdayWorkingTime;
-
             db.Doctors.Add(d);
             db.Commit();
             var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == model.PESEL);
             Session["User"] = usr;
             return RedirectToAction("Index", "Home");
+            
+        }
+
+     
+        public ViewResult BlankEditorRow(string idd)
+        {
+           // string spectoadd = SelectedSpec; //Request.Form["SelectedSpec"].ToString();
+           // int c = Int32.Parse(idd);
+           //// int c = id;
+           // Specialization toadd = db.Specializations.Select(p => p).Where(p => p.Key == c).First();
+           Specialization d = new Specialization();
+            d.Name = "pupa";
+            return View("_Specializations", d);
         }
         //private void SignInAsync(string name)
         //{
