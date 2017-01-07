@@ -78,6 +78,49 @@ namespace SystemRezerwacjiWizyt.Controllers
             Session["User"] = null;
             return RedirectToAction("Index", "Home");
         }
+        public ActionResult EditPatient(string returnUrl)
+        {
+
+            ViewBag.ReturnUrl = returnUrl;
+            if (Session["User"] == null)
+                return RedirectToAction("Index", "Home");
+            Patient a = Session["User"] as Patient;
+            EditUserVievModel b = new EditUserVievModel();
+            b.usr = new User();
+            b.usr = a.User;
+
+
+            return View(b);
+        }
+        [HttpPost]
+       
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditPatient(EditUserVievModel model, string returnUrl)
+        {
+
+            ViewBag.ReturnUrl = returnUrl;
+            if (Session["User"] == null)
+                return RedirectToAction("Index", "Home");
+            Patient a = Session["User"] as Patient;
+            if (a.User.Password != Utils.PasswordHasher.CreateHash(model.password))
+            {
+                EditUserVievModel b = new EditUserVievModel();
+                b.usr = new User();
+                b.usr = a.User;
+                return View(b);
+            }
+            db.BeginTransaction();
+            var pat = db.Patients.Find(a.Key);
+            pat.User.Name = model.usr.Name;
+            pat.User.Mail = model.usr.Mail;
+          
+            //pat.User.Password = a.User.Password;
+            db.Commit();
+
+
+            return RedirectToAction("Index", "Home");
+        }
+
         public ActionResult EditDoctor(string returnUrl)
         {
            

@@ -1,0 +1,52 @@
+﻿@using DatabaseAccess.Model
+@model List<DatabaseAccess.Model.Visit>
+@{
+    ViewBag.Title = "ShowVisits";
+}
+
+<h2>ShowVisits</h2>
+
+<body>
+<tr>
+    @foreach (var a in Model)
+    {
+        if (Session["User"] is Patient)
+        {
+            <td>@a.Doctor.User.Name.ToString()</td>
+            <td>@a.Spec.ToString()</td>
+            <td>@a.Date.ToString()</td>
+            <td>
+                @Html.ActionLink("Odwołaj",                                                  // linkText
+                            "DeleteConfirmationVisit",                                    // actionName
+                             "Visit",                     // controllerName
+                        new
+                        {                                                     // routeValues
+                            VisitId = @a.Key
+
+                        },
+                        null)
+        </td>
+        }
+        else if (Session["User"] is Doctor)
+        {
+            <td>@a.Patient.User.Name.ToString()</td>
+            <td>@a.Spec.ToString()</td>
+            <td>@a.Date.ToString()</td>
+            <td>
+                @Html.ActionLink("Odwołaj",                                                  // linkText
+                            "DeleteConfirmationVisit",                                    // actionName
+                             "Visit",                     // controllerName
+                        new
+                        {                                                     // routeValues
+                            VisitId = @a.Key
+
+                        },
+                        null)
+            </td>
+        }
+
+    }
+</tr>
+
+
+</body>

@@ -25,7 +25,7 @@ namespace DatabaseAccess.Model
                 From = monday;
             }
 
-        public async static Task<Week> Create(Doctor doc, DateTime monday)
+        public static Week Create(Doctor doc, DateTime monday)
         {
             if (doc == null)
                 throw new ArgumentNullException(nameof(doc));
@@ -40,7 +40,7 @@ namespace DatabaseAccess.Model
                 if (time != null)
                 {
                     current = new DateTime(current.Year, current.Month, current.Day, time.Start, 0, 0);
-                    var visits =await Task.Run(() => (from v in doc.Visits
+                    var visits = Task.Run(() => (from v in doc.Visits
                                                  where v.Date.Year == current.Year && v.Date.Month == current.Month && v.Date.Day == current.Day
                                                  select v.Date));
                     //var visits = Task.Run(() => (from v in doc1.Visits
@@ -48,7 +48,7 @@ namespace DatabaseAccess.Model
                     //                            select v.Date));
 
                     for (DateTime s = current; s.Hour < time.End; s = s.AddMinutes(30))
-                        if (!visits.Contains(s) && s >= DateTime.Now.AddHours(1))
+                        if (!visits.Result.Contains(s) && s >= DateTime.Now.AddHours(1))
                             slots.Add(s);
                 }
                 if (slots.Count > 0)

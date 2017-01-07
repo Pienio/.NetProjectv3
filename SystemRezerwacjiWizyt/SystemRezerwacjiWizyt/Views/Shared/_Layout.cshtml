@@ -45,8 +45,20 @@
                     <li>Hello @LoggedIn.User.Name.ToString()</li>
                     <li>@Html.ActionLink("Wyloguj", "LogOut", "Account")</li>
                     if (LoggedIn is Doctor)
+                     {  
+                         <li>@Html.ActionLink("Edytuj konto", "EditDoctor", "Account")</li>
+
+                    }
+                    if (LoggedIn is Patient)
                     {
-                        <li>@Html.ActionLink("Edytuj konto", "EditDoctor", "Account")</li>
+                        <li>@Html.ActionLink("Edytuj konto", "EditPatient", "Account")</li>
+
+                    }
+
+                    if (LoggedIn is Doctor || LoggedIn is Patient)
+                    {
+
+                        <li>@Html.ActionLink("Twoje Wizyty", "ShowVisits", "Visit")</li>
                     }
 
                 }

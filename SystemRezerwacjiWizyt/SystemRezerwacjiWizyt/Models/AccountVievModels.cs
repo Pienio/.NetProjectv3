@@ -25,6 +25,12 @@ namespace SystemRezerwacjiWizyt.Models
         
     }
 
+    public class EditUserVievModel
+    {
+      public  User usr  {get;set;}
+        public string password { get; set; }
+    }
+
    
     public class EditDoctorViewModel
     {

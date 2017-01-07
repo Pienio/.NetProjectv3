@@ -1,0 +1,127 @@
+﻿@model SystemRezerwacjiWizyt.Models.RegisterVisit
+
+@{
+    ViewBag.Title = "AddVisit";
+    var Speclist = Model.doc.Specialization;
+    var Datelist = Model.DateToChoose;
+}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //$('#okkkk').click(function () {
+            //$(document).getElementById("SpecToAdd").selectedIndex = 0;
+            // $("*").hide();
+            document.getElementById("NextWeek").value = false;
+            document.getElementById("PastWeek").value = false;
+            // });
+        });
+
+        function SetNextWeekTrue() {
+            document.getElementById("NextWeek").value = true;
+            document.getElementById("PastWeek").value = false;
+        }
+
+        function SetPrevWeekTrue() {
+            document.getElementById("NextWeek").value = false;
+            document.getElementById("PastWeek").value = true;
+        }
+
+        
+    </script>
+</head>
+<body>
+    <h2>AddVisit</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Zarejestruj wizytę u @Model.doc.User.Name.ToString()</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                Wybierz Specjalizacje
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.SelectedSpec, new SelectList(Speclist, "Key", "Name", "0"))
+                    @*@Html.EditorFor(model => model.SelectedSpec, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.SelectedSpec, "", new {@class = "text-danger"})*@
+                </div>
+            </div>
+            <div class="form-group">
+                Wybierz Date w tygodniu
+                <div class="col-md-10">
+
+                    @Html.DropDownListFor(model => model.ChosenDate, new SelectList(Datelist, "Key", "See", "0"), "Choose...")
+                    @*@Html.EditorFor(model => model.SelectedSpec, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.SelectedSpec, "", new {@class = "text-danger"})*@
+                    @for (int i = 0; i < Model.DateToChoose.Count(); i++)
+                {
+
+                        
+                        @*<li><input type="submit" value="Delete" class="btn btn-default"/></li>*@
+                        @Html.HiddenFor(m => m.DateToChoose[i].date)
+                        //{
+                        //    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", Model.doc.Specialization[i]);
+                        //}
+
+                    }
+                    
+                    
+                    <button onclick="SetNextWeekTrue()">NextWeek</button>
+                    <button onclick="SetPrevWeekTrue()">PrevWeek</button>
+                </div>
+            </div>
+
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.ChosenDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ChosenDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ChosenDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    <div class="checkbox" style="visibility: hidden">
+                        @Html.TextBoxFor(model => model.GetNextWeek,new {id = "NextWeek"})
+
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(model=>model.doc.User.Name.Name)
+            @Html.HiddenFor(model => model.doc.User.Name.Surname)
+            @Html.HiddenFor(model => model.doc.Key)
+            @Html.HiddenFor(model => model.doc.User.Key)
+            @for (int i = 0; i < Model.doc.Specialization.Count(); i++)
+                {
+
+                @*<li>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</li>*@
+                        @*<li><input type="submit" value="Delete" class="btn btn-default"/></li>*@
+                        @Html.HiddenFor(m => m.doc.Specialization[i].Name)
+                //{
+                //    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", Model.doc.Specialization[i]);
+                //}
+
+            }
+            <div class="form-group">
+              
+                <div class="col-md-10" style="visibility: hidden">
+                    <div class="checkbox">
+                        @Html.TextBoxFor(model => model.GetPasttWeek, new { id = "PastWeek" })
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+</body>

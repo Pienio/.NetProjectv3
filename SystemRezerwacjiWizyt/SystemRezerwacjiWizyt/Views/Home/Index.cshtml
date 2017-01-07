@@ -1,5 +1,16 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    bool IsLogged;
+    DatabaseAccess.Model.Person LoggedIn = null;
+    if (Session["User"] == null)
+    {
+        IsLogged = false;
+    }
+    else
+    {
+        IsLogged = true;
+        LoggedIn = (DatabaseAccess.Model.Person)Session["User"];
+    }
 }
 @using DatabaseAccess.Model
 @using Microsoft.AspNet.Identity
@@ -42,8 +53,20 @@
                 <td>
                     @Doctor.FirstFreeSlot.ToString()
                 </td>
-
-
+                @if (IsLogged && LoggedIn is Patient)
+                {
+                    <td>@Html.ActionLink("Zarezerwuj Wizyte",                                                  // linkText
+                            "AddVisit",                                    // actionName
+                             "Visit",                     // controllerName
+                        new
+                            {                                                     // routeValues
+                             DoctorId = @Doctor.Key
+        
+                                    },
+                        null)
+                </td>
+                }
+                
 
 
             </tr>

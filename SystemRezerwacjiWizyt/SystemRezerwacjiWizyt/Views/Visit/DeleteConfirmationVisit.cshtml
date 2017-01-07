@@ -1,0 +1,21 @@
+﻿@model int
+@{
+    ViewBag.Title = "DeleteConfirmationVisit";
+}
+
+<h2>Czy na pewno chcesz usunąć tę wizytę?</h2>
+@Html.ActionLink("Odwołaj",                                                  // linkText
+                            "DeleteVisit",                                    // actionName
+                             "Visit",                     // controllerName
+                        new
+                        {                                                     // routeValues
+                            VisitId = @Model
+
+                        },
+                        null)
+@Html.ActionLink("Powrót",                                                  // linkText
+                            "ShowVisits",                                    // actionName
+                             "Visit",                     // controllerName
+                        
+                       null,
+                        null)

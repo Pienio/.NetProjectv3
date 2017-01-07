@@ -187,6 +187,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountVievModels.cs" />
+    <Compile Include="Models\VisitViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\PasswordHasher.cs" />
   </ItemGroup>
@@ -234,6 +235,9 @@
     <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
     <Content Include="Views\Account\_Specializations.cshtml" />
     <Content Include="Views\Visit\AddVisit.cshtml" />
+    <Content Include="Views\Visit\ShowVisits.cshtml" />
+    <Content Include="Views\Visit\DeleteConfirmationVisit.cshtml" />
+    <Content Include="Views\Account\EditPatient.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
