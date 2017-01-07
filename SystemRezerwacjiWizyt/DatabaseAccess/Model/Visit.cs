@@ -20,14 +20,17 @@ namespace DatabaseAccess.Model
         [Required]
         [DataMember]
         public DateTime Date { get; set; } =DateTime.Today;
+        [Required]
+        public Specialization Spec { get; set; }
 
         public Visit() { }
 
-        public Visit(Patient patient, Doctor doctor, DateTime date)
+        public Visit(Patient patient, Doctor doctor, DateTime date,Specialization spc)
         {
             Patient = patient;
             Doctor = doctor;
             Date = date;
+            Spec = spc;
         }
     }
 }

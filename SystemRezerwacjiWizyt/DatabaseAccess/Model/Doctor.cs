@@ -83,7 +83,10 @@ namespace DatabaseAccess.Model
         {
             get
             {
+                if (!ProfileAccepted)
+                    return DateTime.Now;
                 IApplicationData db = new ApplicationDataFactory().CreateApplicationData();
+               
                 DateTime current = NextSlot(DateTime.Now.AddMinutes(60));
                 //zmiana
                 var visits = (from v in Visits

@@ -99,35 +99,36 @@ namespace SystemRezerwacjiWizyt.Controllers
         public async Task<ActionResult> EditDoctor(EditDoctorViewModel model, string returnUrl,string Del )
         {
 
-            //if (Request.Form["SpecId"] != null)
-            //{
-            //    string spc = Request.Form["SpecId"].ToString();
-            //    model.SpecId = Int32.Parse(spc);
-            //}
-            //else
-            //{
-            //    model.SpecId = 0;
-            //}
-          
             ViewBag.ReturnUrl = returnUrl;
+            model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+            List<Specialization> nowaa = new List<Specialization>();
+            foreach (var specialization in model.doc.Specialization)
+            {
+                var sdf = db.Specializations.Select(p => p).First(p => p.Name == specialization.Name);
+                nowaa.Add(sdf);
+            }
             if (model.SpecId != 0)
             {
                 Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
 
                 var abc = model.doc.Specialization.Select(p => p).Where(p => p.Name == toad.Name);
+              
                 if (abc.Count() == 0)
                 {
-                   // Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
-                    model.doc.Specialization.Add(toad);
                     
+                    // Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
+                    nowaa.Add((toad));
+                    model.doc.Specialization = nowaa;
+
                 }
                 else
                 {
+                    model.doc.Specialization = nowaa;
                     ViewBag.Mess = "Nie możesz dodać dwóch takich samych specjalizacji";
                 }
                 
                
-                model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+               // model.SpecToChoose = db.Specializations.Select(p => p).ToList();
                 model.password = "";
                 model.SpecId = 0;
                 //Request.Form["SpecId"] = "";
@@ -145,13 +146,18 @@ namespace SystemRezerwacjiWizyt.Controllers
                 {
                     int key = Int32.Parse(VARIABLE);
                     var todel = db.Specializations.Find(key);
-                    var todel1 = model.doc.Specialization.Select(p => p).Where(p => p.Name == todel.Name).First();
-                    model.doc.Specialization.Remove(todel1);
+                    var todel1 = nowaa.Select(p => p).Where(p => p.Name == todel.Name).First();
+                    nowaa.Remove(todel1);
                 }
-                }
-                model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+            }
+
+
+               
+               
+                
+                model.doc.Specialization = nowaa;
+
                 model.password = "";
-                //Request.Form["SpecId"] = "";
                 return View(model);
             }
 
@@ -161,19 +167,15 @@ namespace SystemRezerwacjiWizyt.Controllers
             if (string.IsNullOrEmpty(model.password)||a.User.Password != SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.password))
             {
                 ViewBag.Message = "Błędne hasło";
-                return RedirectToAction("Index", "Home");
+                return View(model);
+                //return RedirectToAction("Index", "Home");
             }
             db.BeginTransaction();
             var k = db.Doctors.Select(p=>p).First(p => p.Key==a.Key);
        
             k.CopyFrom(model.doc);
-            List<Specialization> nowa = new List<Specialization>();
-            foreach (var VARIABLE in model.doc.Specialization)
-            {
-                var tad = db.Specializations.Select(p => p).Where(p => p.Name == VARIABLE.Name).First();
-                nowa.Add(tad);
-            }
-            k.Specialization = nowa;
+           
+            k.Specialization = nowaa;
             //db.SetEntryToModified(k);
             //  var manager = ((IObjectContextAdapter)db).ObjectContext.ObjectStateManager;
 
@@ -199,6 +201,11 @@ namespace SystemRezerwacjiWizyt.Controllers
         {
             ViewBag.ReturnUrl = returnUrl;
             var b = new RegisterDoctorViewModel();
+            b.doc= new Doctor();
+            b.doc.ProfileAccepted = false;
+            b.doc.User= new User();
+            b.doc.User.Name=new PersonName();
+            b.doc.Specialization= new List<Specialization>();
             b.SpecToChoose = db.Specializations.Select(p => p).ToList();
             return View(b);
         }
@@ -228,27 +235,101 @@ namespace SystemRezerwacjiWizyt.Controllers
         public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl )
         {
             ViewBag.ReturnUrl = returnUrl;
-            string spectoadd = Request.Form["selectedSpecs"].ToString();
+            model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+            List<Specialization> nowaa = new List<Specialization>();
+            foreach (var specialization in model.doc.Specialization)
+            {
+                var sdf = db.Specializations.Select(p => p).First(p => p.Name == specialization.Name);
+                nowaa.Add(sdf);
+            }
+            if (model.SpecId != 0)
+            {
+                Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
+
+                var abc = model.doc.Specialization.Select(p => p).Where(p => p.Name == toad.Name);
+
+                if (abc.Count() == 0)
+                {
+
+                    // Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
+                    nowaa.Add((toad));
+                    model.doc.Specialization = nowaa;
+
+                }
+                else
+                {
+                    model.doc.Specialization = nowaa;
+                    ViewBag.Mess = "Nie możesz dodać dwóch takich samych specjalizacji";
+                }
+
+
+                // model.SpecToChoose = db.Specializations.Select(p => p).ToList();
                 
+                model.SpecId = 0;
+                //Request.Form["SpecId"] = "";
+                return View(model);
+                //return RedirectToAction("EditDoctor", "Account", model);
+
+            }
+            if (model.SelectedSpec != null)
+            {
+                if (model.SelectedSpec.Count() != model.doc.Specialization.Count)
+                {
+
+
+                    foreach (var VARIABLE in model.SelectedSpec)
+                    {
+                        int key = Int32.Parse(VARIABLE);
+                        var todel = db.Specializations.Find(key);
+                        var todel1 = nowaa.Select(p => p).Where(p => p.Name == todel.Name).First();
+                        nowaa.Remove(todel1);
+                    }
+                }
+
+
+
+
+
+                model.doc.Specialization = nowaa;
+
+               
+                return View(model);
+            }
+
+
+
+
+
+            if (model.Password == model.PasswordAgain)
+            {
+                
+            
             db.BeginTransaction();
             Doctor d = new Doctor();
             d.User = new User();
             d.User.Name = model.Name;
-            d.User.Kind = DocOrPat.Patient;
+            d.User.Kind = DocOrPat.Doctor;
             d.User.Mail = model.Mail;
             d.User.PESEL = model.PESEL;
             d.User.Password = SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.Password);
-            d.Specialization = model.Specialization;
-            d.FridayWorkingTime = model.FridayWorkingTime;
-            d.MondayWorkingTime = model.MondayWorkingTime;
-            d.ThursdayWorkingTime = model.ThursdayWorkingTime;
-            d.TuesdayWorkingTime = model.TuesdayWorkingTime;
-            d.WednesdayWorkingTime = model.WednesdayWorkingTime;
+            d.Specialization = model.doc.Specialization;
+            d.FridayWorkingTime = model.doc.FridayWorkingTime;
+            d.MondayWorkingTime = model.doc.MondayWorkingTime;
+            d.ThursdayWorkingTime = model.doc.ThursdayWorkingTime;
+            d.TuesdayWorkingTime = model.doc.TuesdayWorkingTime;
+            d.WednesdayWorkingTime = model.doc.WednesdayWorkingTime;
+            d.ProfileAccepted = true;
             db.Doctors.Add(d);
             db.Commit();
             var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == model.PESEL);
             Session["User"] = usr;
             return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.Mess = "Hasła muszą być takie same";
+                return View(model);
+            }
             
         }
 
