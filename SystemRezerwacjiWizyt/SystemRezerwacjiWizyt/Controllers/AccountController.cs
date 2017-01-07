@@ -57,9 +57,13 @@ namespace SystemRezerwacjiWizyt.Controllers
                 {
                     Session["User"] = db.Doctors.First(p => p.User.Key == c.Key);
                 }    
-                else
+                else if(c.Kind == DocOrPat.Patient)
                 {
                     Session["User"] = db.Patients.First(p => p.User.Key == c.Key);
+                }
+                else
+                {
+                    Session["User"] = db.Admins.First(p => p.User.Key == c.Key);
                 }
                 //SignInAsync(a.First().Name.ToString());
                 //Session["User"] = c;
@@ -79,6 +83,144 @@ namespace SystemRezerwacjiWizyt.Controllers
             Session["User"] = null;
             return RedirectToAction("Index", "Home");
         }
+
+        public ActionResult Requests(string returnUrl)
+        {
+            if (Session["User"] is Admin)
+            {
+                List<ProfileRequest> lista = new List<ProfileRequest>();
+                lista = db.Requests.Select(p => p).ToList();
+                return View(lista);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public ActionResult AcceptRequests(int ID,string returnUrl)
+        {
+            if (Session["User"] is Admin)
+            {
+                List<ProfileRequest> lista = new List<ProfileRequest>();
+                MailServices tosend = new MailServices();
+                var a = db.Requests.Find(ID);
+                if (a.OldProfile == null)
+                {
+                    db.BeginTransaction();
+                    var doc = db.Doctors.Find(a.NewProfile.Key);
+                    doc.ProfileAccepted = true;
+                    db.Requests.Remove(a);
+                    db.Commit();
+                    tosend.SendAcceptationMail(doc.User.Mail);
+                    lista = db.Requests.Select(p => p).ToList();
+                    return View("Requests", lista);
+
+                }
+                db.BeginTransaction();
+                var docold = db.Doctors.Find(a.OldProfile.Key);
+                var docnew = db.Doctors.Find(a.NewProfile.Key);
+                docold.CopyFrom(docnew);
+                db.Doctors.Remove(docnew);
+                db.Requests.Remove(a);
+                db.Commit();
+                tosend.SendAcceptationEditMail(docold.User.Mail);
+                lista = db.Requests.Select(p => p).ToList();
+                return View("Requests",lista);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+        public ActionResult DeclineRequests(int ID, string returnUrl)
+        {
+            if (Session["User"] is Admin)
+            {
+                //List<ProfileRequest> lista = new List<ProfileRequest>();
+                //var a = db.Requests.Find(ID);
+                //if (a.OldProfile == null)
+                //{
+                //    db.BeginTransaction();
+                //    var doc = db.Doctors.Find(a.NewProfile.Key);
+                //    db.Doctors.Remove(doc);
+                //    db.Requests.Remove(a);
+                //    db.Commit();
+
+                //    lista = db.Requests.Select(p => p).ToList();
+                //    return View("Requests", lista);
+
+                //}
+                //db.BeginTransaction();
+                //var docold = db.Doctors.Find(a.OldProfile.Key);
+                //var docnew = db.Doctors.Find(a.NewProfile.Key);
+                //docold.ProfileAccepted = true;
+                //db.Doctors.Remove(docnew);
+                //db.Requests.Remove(a);
+                //db.Commit();
+                //lista = db.Requests.Select(p => p).ToList();
+                //return View("Requests", lista);
+                RequestRefuse nn=new RequestRefuse();
+                nn.RequestID = ID;
+                Session["RequestRefuse"] = nn;
+               return RedirectToAction("DeclineRequestsReason");
+                //return View("DeclineRequestsReason",nn);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public ActionResult DeclineRequestsReason(string returnUrl)
+        {
+            RequestRefuse nn = Session["RequestRefuse"] as RequestRefuse;
+            ;
+            return View(nn);
+        }
+        [HttpPost]       
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeclineRequestsReason(RequestRefuse model, string returnUrl)
+        {
+            if (Session["User"] is Admin)
+            {
+                if (model.Reason == null)
+                    model.Reason = "";
+                List<ProfileRequest> lista = new List<ProfileRequest>();
+                MailServices tosend = new MailServices();
+                var a = db.Requests.Find(model.RequestID);
+                if (a.OldProfile == null)
+                {
+                    db.BeginTransaction();
+                    var doc = db.Doctors.Find(a.NewProfile.Key);
+                    db.Doctors.Remove(doc);
+                    db.Requests.Remove(a);
+                    db.Commit();
+                   
+                    tosend.SendRejectionMail(doc.User.Mail,model.Reason);
+                    lista = db.Requests.Select(p => p).ToList();
+                    return View("Requests", lista);
+
+                }
+                db.BeginTransaction();
+                var docold = db.Doctors.Find(a.OldProfile.Key);
+                var docnew = db.Doctors.Find(a.NewProfile.Key);
+                docold.ProfileAccepted = true;
+                db.Doctors.Remove(docnew);
+                db.Requests.Remove(a);
+                db.Commit();
+               // MailServices tosend = new MailServices();
+                tosend.SendEditRejectionMail(docold.User.Mail,model.Reason);
+                lista = db.Requests.Select(p => p).ToList();
+                return View("Requests", lista);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
+        }
+
         public ActionResult EditPatient(string returnUrl)
         {
 
@@ -214,19 +356,33 @@ namespace SystemRezerwacjiWizyt.Controllers
                 return View(model);
                 //return RedirectToAction("Index", "Home");
             }
-            db.BeginTransaction();
-            var k = db.Doctors.Select(p=>p).First(p => p.Key==a.Key);
-       
-            k.CopyFrom(model.doc);
-           
-            k.Specialization = nowaa;
-            //db.SetEntryToModified(k);
-            //  var manager = ((IObjectContextAdapter)db).ObjectContext.ObjectStateManager;
 
-            // manager.ChangeObjectState(k, EntityState.Modified);
-            //db.SetEntryToModified(k);
-            Session["User"] = model.doc;
+            db.BeginTransaction();
+            var k = db.Doctors.Select(p => p).First(p => p.Key == a.Key);
+            k.ProfileAccepted = false;
+            model.doc.ProfileAccepted = false;
+            model.doc.Specialization = nowaa;
+            //db.Doctors.Add(model.doc);
+            ProfileRequest nowy = new ProfileRequest();
+            nowy.OldProfile = k;
+            nowy.NewProfile = model.doc;
+            db.Requests.Add(nowy);
             db.Commit();
+            Session["User"] = null;
+            //Tu sie dobrze edytowało
+            //db.BeginTransaction();
+            //var k = db.Doctors.Select(p=>p).First(p => p.Key==a.Key);
+
+            //k.CopyFrom(model.doc);
+
+            //k.Specialization = nowaa;
+            ////db.SetEntryToModified(k);
+            ////  var manager = ((IObjectContextAdapter)db).ObjectContext.ObjectStateManager;
+
+            //// manager.ChangeObjectState(k, EntityState.Modified);
+            ////db.SetEntryToModified(k);
+            //Session["User"] = model.doc;
+            //db.Commit();
 
             return RedirectToAction("Index", "Home");
         }
@@ -316,6 +472,10 @@ namespace SystemRezerwacjiWizyt.Controllers
             tosend.SendRegistrationConfirmation(Doctor.User.Mail, b.Token);
             return View(b);
         }
+
+
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterDoctorToken(TokenConfirmationViewModel model, string returnUrl)
@@ -325,13 +485,21 @@ namespace SystemRezerwacjiWizyt.Controllers
                 return View(model);
             }
             var Doctor = Session["TMP"] as Doctor;
+            ProfileRequest now = new ProfileRequest();
+            Doctor.ProfileAccepted = false;
+
+            now.NewProfile = Doctor;
+
             db.BeginTransaction();
-            db.Doctors.Add(Doctor);
+           // db.Doctors.Add(Doctor);
+            db.Requests.Add(now);
+            //db.Doctors.Add(Doctor);
             db.Commit();
-            var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == Doctor.User.PESEL);
-            Session["User"] = usr;
-            MailServices tosend = new MailServices();
-            tosend.SendAcceptationMail(usr.User.Mail);
+            ViewBag.Message = "Twoja prośba o akceptacje profilu została przesłana do admina";
+            //var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == Doctor.User.PESEL);
+            //Session["User"] = usr;
+            //MailServices tosend = new MailServices();
+            //tosend.SendAcceptationMail(usr.User.Mail);
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
@@ -422,7 +590,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             d.ThursdayWorkingTime = model.doc.ThursdayWorkingTime;
             d.TuesdayWorkingTime = model.doc.TuesdayWorkingTime;
             d.WednesdayWorkingTime = model.doc.WednesdayWorkingTime;
-            d.ProfileAccepted = true;
+            d.ProfileAccepted = false;
                 //  db.Doctors.Add(d);
                 //   db.Commit();
                 //    var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == model.PESEL);

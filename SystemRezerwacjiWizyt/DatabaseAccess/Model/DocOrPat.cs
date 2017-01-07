@@ -14,5 +14,7 @@ namespace DatabaseAccess.Model
         Doctor = 0,
         [EnumMember]
         Patient = 1,
+        [EnumMember]
+        Admin = 2,
     }
 }

@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="ApplicationDataFactory.cs" />
     <Compile Include="ContainerInitializer.cs" />
+    <Compile Include="Model\Admin.cs" />
     <Compile Include="Model\DocOrPat.cs" />
     <Compile Include="Model\Doctor.cs" />
     <Compile Include="Model\Entity.cs" />

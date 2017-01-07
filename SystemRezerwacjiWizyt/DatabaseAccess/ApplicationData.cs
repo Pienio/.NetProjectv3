@@ -19,6 +19,8 @@ namespace DatabaseAccess.Model
         public DbSet<Visit> Visits { get; set; }
         public DbSet<ProfileRequest> Requests { get; set; }
 
+        public DbSet<Admin> Admins { get; set; }
+
         public bool IsTransactionRunning { get; private set; } = false;
         public bool CommitUnfinishedTransaction { get; set; } = true;
 
@@ -69,6 +71,7 @@ namespace DatabaseAccess.Model
             }
             if (!Users.Any())
             {
+                
                 string[] names = { "Kuba", "Jan", "Łukasz", "Adrian", "Bartosz", "Marek", "Filip", "Bartłomiej" };
                 string[] surnames = { "Soczkowski", "Berwid", "Okular", "Michałowski", "Skała", "Mikowski", "Wasiłkowski", "Normowski" };
                 string[] pesels = { "09586749381", "19683750923", "94860285691", "58672349682", "38596827364", "58476923857", "88975643287", "29384795618" };
@@ -101,6 +104,18 @@ namespace DatabaseAccess.Model
                     ne.FridayWorkingTime.End = 12 + i / 2;
                     ne.Specialization.Add(specs[i]);
                     Doctors.Add(ne);
+                }
+                if (!Admins.Any())
+                {
+                    Admin nowy = new Admin();
+                    nowy.User = new User() { Name = new PersonName() };
+                    nowy.User.Mail = "sysrejwiz@gmail.com";
+                    nowy.User.Name.Name = "Admin";
+                    nowy.User.Name.Surname = "Admin";
+                    nowy.User.PESEL = "11111111111";
+                    nowy.User.Password = "96e79218965eb72c92a549dd5a330112";
+                    nowy.User.Kind = DocOrPat.Admin;
+                    Admins.Add(nowy);
                 }
                 this.SaveChanges();
             }

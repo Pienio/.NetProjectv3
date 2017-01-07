@@ -241,6 +241,8 @@
     <Content Include="Views\Account\EditPatient.cshtml" />
     <Content Include="Views\Account\RegisterPatientToken.cshtml" />
     <Content Include="Views\Account\RegisterDoctorToken.cshtml" />
+    <Content Include="Views\Account\Requests.cshtml" />
+    <Content Include="Views\Account\DeclineRequestsReason.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

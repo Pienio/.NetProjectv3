@@ -16,7 +16,8 @@ namespace DatabaseAccess
         DbSet<Specialization> Specializations { get; set; }
         DbSet<Visit> Visits { get; set; }
         DbSet<ProfileRequest> Requests { get; set; }
-        
+        DbSet<Admin> Admins { get; set; }
+
         void Fill();
 
         void SaveChangesOn();

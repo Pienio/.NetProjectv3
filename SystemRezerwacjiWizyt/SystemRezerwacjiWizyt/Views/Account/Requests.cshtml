@@ -1,0 +1,55 @@
+﻿@model List<DatabaseAccess.Model.ProfileRequest>
+    @{
+        ViewBag.Title = "Requests";
+    }
+
+    <h2>Requests</h2>
+<body>
+<td>
+    @foreach (var a in Model)
+    {
+        if (a.OldProfile == null)
+        {
+            <h6>Prośba o rejestracje</h6>
+        }
+        if (a.OldProfile != null)
+        {   <h6>Prośba o edycję</h6>
+        <tr>@a.OldProfile.User.Name.ToString()</tr>
+            <p>Specjalizacje</p>
+            foreach (var spec in a.OldProfile.Specialization)
+            {
+                <tr>@spec.ToString()</tr>
+            }
+        }
+
+        <p>Specjalizacje</p>
+        <tr>@a.NewProfile.User.Name.ToString()</tr>
+        foreach (var spec in a.NewProfile.Specialization)
+        {
+            <tr>@spec.ToString()</tr>
+        }
+        <td>
+            @Html.ActionLink("Akceptuj",                                                  // linkText
+                "AcceptRequests",                                    // actionName
+                "Account",                     // controllerName
+                new
+                {                                                     // routeValues
+                    ID = @a.Key
+
+                },
+                null)
+        </td>
+        <td>
+            @Html.ActionLink("Odmów",                                                  // linkText
+                            "DeclineRequests",                                    // actionName
+                             "Account",                     // controllerName
+                        new
+                        {                                                     // routeValues
+                            ID = @a.Key
+
+                        },
+                        null)
+        </td>
+    }
+</td>
+</body>

@@ -54,6 +54,11 @@
                         <li>@Html.ActionLink("Edytuj konto", "EditPatient", "Account")</li>
 
                     }
+                    if (LoggedIn is Admin)
+                    {
+                        <li>@Html.ActionLink("Prośby", "Requests", "Account")</li>
+
+                    }
 
                     if (LoggedIn is Doctor || LoggedIn is Patient)
                     {

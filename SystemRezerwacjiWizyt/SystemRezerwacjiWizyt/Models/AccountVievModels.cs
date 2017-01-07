@@ -37,7 +37,12 @@ namespace SystemRezerwacjiWizyt.Models
         public string ToWrite { get; set; }
 
     }
-   
+
+    public class RequestRefuse
+    {
+        public int RequestID { get; set; }
+        public string Reason { get; set; }
+    }
     public class EditDoctorViewModel
     {
         [Required]
