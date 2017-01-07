@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemRezerwacjiWizyt", "Sy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAccess", "DatabaseAccess\DatabaseAccess.csproj", "{A4928E46-1FBA-4D87-B427-42F69E6BF52A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailService", "MailService\MailService.csproj", "{239BD250-2253-4238-81AE-2B253A6AFCFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A4928E46-1FBA-4D87-B427-42F69E6BF52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4928E46-1FBA-4D87-B427-42F69E6BF52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4928E46-1FBA-4D87-B427-42F69E6BF52A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{239BD250-2253-4238-81AE-2B253A6AFCFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{239BD250-2253-4238-81AE-2B253A6AFCFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{239BD250-2253-4238-81AE-2B253A6AFCFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{239BD250-2253-4238-81AE-2B253A6AFCFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

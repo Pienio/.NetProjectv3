@@ -31,6 +31,12 @@ namespace SystemRezerwacjiWizyt.Models
         public string password { get; set; }
     }
 
+    public class TokenConfirmationViewModel
+    {
+        public string Token { get; set; }
+        public string ToWrite { get; set; }
+
+    }
    
     public class EditDoctorViewModel
     {

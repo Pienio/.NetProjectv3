@@ -190,6 +190,7 @@
     <Compile Include="Models\VisitViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\PasswordHasher.cs" />
+    <Compile Include="Utils\Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -238,6 +239,8 @@
     <Content Include="Views\Visit\ShowVisits.cshtml" />
     <Content Include="Views\Visit\DeleteConfirmationVisit.cshtml" />
     <Content Include="Views\Account\EditPatient.cshtml" />
+    <Content Include="Views\Account\RegisterPatientToken.cshtml" />
+    <Content Include="Views\Account\RegisterDoctorToken.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -254,6 +257,10 @@
     <ProjectReference Include="..\DatabaseAccess\DatabaseAccess.csproj">
       <Project>{a4928e46-1fba-4d87-b427-42f69e6bf52a}</Project>
       <Name>DatabaseAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MailService\MailService.csproj">
+      <Project>{239bd250-2253-4238-81ae-2b253a6afcfc}</Project>
+      <Name>MailService</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

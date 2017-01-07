@@ -15,6 +15,7 @@ using DatabaseAccess;
 using DatabaseAccess.Model;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity;
+using MailService;
 
 namespace SystemRezerwacjiWizyt.Controllers
 {
@@ -258,7 +259,7 @@ namespace SystemRezerwacjiWizyt.Controllers
         public async Task<ActionResult> RegisterPatient(RegisterUserVievModel model, string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            db.BeginTransaction();
+           // db.BeginTransaction();
             Patient d= new Patient();
             d.User=new User();
             d.User.Name = model.Name;
@@ -266,13 +267,73 @@ namespace SystemRezerwacjiWizyt.Controllers
             d.User.Mail = model.Mail;
             d.User.PESEL = model.PESEL;
             d.User.Password = SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.Password);
-            db.Patients.Add(d);
+          //  db.Patients.Add(d);
+           // db.Commit();
+          //  var usr = db.Patients.Select(p => p).First(p => p.User.PESEL == model.PESEL);
+           // Session["User"] = usr;
+            Session["TMP"] = d;
+            return RedirectToAction("RegisterPatientToken", "Account");
+        }
+
+        public ActionResult RegisterPatientToken(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;           
+            TokenConfirmationViewModel b = new TokenConfirmationViewModel();
+            b.Token = Utils.Token.GetToken();
+            b.ToWrite = "";
+            var Patient = Session["TMP"] as Patient;
+            MailServices tosend = new MailServices();
+            tosend.SendRegistrationConfirmation(Patient.User.Mail,b.Token);
+            return View(b);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterPatientToken(TokenConfirmationViewModel model, string returnUrl)
+        {
+            if (model.Token != model.ToWrite)
+            {
+                return View(model);
+            }
+            var Patient = Session["TMP"] as Patient;
+            db.BeginTransaction();
+            db.Patients.Add(Patient);
             db.Commit();
-            var usr = db.Patients.Select(p => p).First(p => p.User.PESEL == model.PESEL);
+            var usr = db.Patients.Select(p => p).First(p => p.User.PESEL == Patient.User.PESEL);
             Session["User"] = usr;
+            MailServices tosend = new MailServices();
+            tosend.SendAcceptationMail(usr.User.Mail);
             return RedirectToAction("Index", "Home");
         }
 
+        public ActionResult RegisterDoctorToken(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            TokenConfirmationViewModel b = new TokenConfirmationViewModel();
+            b.Token = Utils.Token.GetToken();
+            b.ToWrite = "";
+            var Doctor = Session["TMP"] as Doctor;
+            MailServices tosend = new MailServices();
+            tosend.SendRegistrationConfirmation(Doctor.User.Mail, b.Token);
+            return View(b);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterDoctorToken(TokenConfirmationViewModel model, string returnUrl)
+        {
+            if (model.Token != model.ToWrite)
+            {
+                return View(model);
+            }
+            var Doctor = Session["TMP"] as Doctor;
+            db.BeginTransaction();
+            db.Doctors.Add(Doctor);
+            db.Commit();
+            var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == Doctor.User.PESEL);
+            Session["User"] = usr;
+            MailServices tosend = new MailServices();
+            tosend.SendAcceptationMail(usr.User.Mail);
+            return RedirectToAction("Index", "Home");
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl )
@@ -347,7 +408,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             {
                 
             
-            db.BeginTransaction();
+          //  db.BeginTransaction();
             Doctor d = new Doctor();
             d.User = new User();
             d.User.Name = model.Name;
@@ -362,11 +423,13 @@ namespace SystemRezerwacjiWizyt.Controllers
             d.TuesdayWorkingTime = model.doc.TuesdayWorkingTime;
             d.WednesdayWorkingTime = model.doc.WednesdayWorkingTime;
             d.ProfileAccepted = true;
-            db.Doctors.Add(d);
-            db.Commit();
-            var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == model.PESEL);
-            Session["User"] = usr;
-            return RedirectToAction("Index", "Home");
+                //  db.Doctors.Add(d);
+                //   db.Commit();
+                //    var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == model.PESEL);
+                //   Session["User"] = usr;
+                // return RedirectToAction("Index", "Home");
+                Session["TMP"] = d;
+                return RedirectToAction("RegisterDoctorToken", "Account");
             }
             else
             {

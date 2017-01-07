@@ -112,6 +112,8 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             db.Visits.Add(toAdd);
             db.Commit();
+            MailService.MailServices tosend = new MailService.MailServices();
+            tosend.SendVisitRegistrationNotifications(a,pat, model.DateToChoose[model.ChosenDate - 1].date);
             @ViewBag.Message = "Wizyta została zarejestrowana";
             return RedirectToAction("Index", "Home");
         }
@@ -125,11 +127,14 @@ namespace SystemRezerwacjiWizyt.Controllers
             var a = db.Visits.Find(VisitId);
             var b = db.Doctors.Find(a.Doctor.Key);
             var c = db.Patients.Find(a.Patient.Key);
+            Person crt = Session["User"] as Person;
             db.BeginTransaction();
             b.Visits.Remove(a);
             c.Visits.Remove(a);
             db.Visits.Remove(a);
             db.Commit();
+            MailService.MailServices tosend= new MailService.MailServices();
+            tosend.SendVisitDeleteNotification(a,crt.User.Kind);
             return RedirectToAction("Index", "Home");
         }
 
