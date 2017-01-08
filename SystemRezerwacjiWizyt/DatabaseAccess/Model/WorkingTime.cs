@@ -17,8 +17,10 @@ namespace DatabaseAccess.Model
     public class WorkingTime
     {
         [DataMember]
+        [Range(0, 24)]
         public int Start { get; set; }
         [DataMember]
+        [Range(0, 24)]
         public int End { get; set; }
 
         public WorkingTime() 

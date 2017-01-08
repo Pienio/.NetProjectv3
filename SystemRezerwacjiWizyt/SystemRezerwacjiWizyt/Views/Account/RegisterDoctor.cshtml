@@ -33,7 +33,7 @@
 
 
 <body>
-
+    <p class="text-danger">@ViewBag.Error</p>
     <h2>RegisterDoctor</h2>
 
     @using (Html.BeginForm())
@@ -68,7 +68,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -80,19 +80,19 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.PasswordAgain, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.PasswordAgain, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.PasswordFor(model => model.PasswordAgain, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.PasswordAgain, "", new { @class = "text-danger" })
                 </div>
             </div>
 
-            <div class="form-group">
+            @*<div class="form-group">
                 <div class="col-md-10">
                     <div class="checkbox">
                         @Html.HiddenFor(model => model.Active)
-                        @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+                        
                     </div>
                 </div>
-            </div>
+            </div>*@
 
             <div>
 
@@ -128,8 +128,12 @@
                     @Html.ValidationMessageFor(model => model.Mail, "", new { @class = "text-danger" })
                 </div>
             </div>
+            @Html.HiddenFor(model => model.doc.User.PESEL)
+            @Html.HiddenFor(model => model.doc.User.Password)
 
-          
+            @Html.HiddenFor(Model => Model.doc.User.Active)
+            @Html.HiddenFor(Model => Model.doc.User.Kind)
+        
 
             <div class="form-group">
                 @Html.LabelFor(model => model.doc.MondayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })

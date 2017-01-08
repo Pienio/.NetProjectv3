@@ -254,11 +254,19 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.password, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
                 </div>
             </div>
-
+            @Html.HiddenFor(model => model.doc.User.PESEL)
+            @Html.HiddenFor(model => model.doc.User.Password)
+            
+            @Html.HiddenFor(Model => Model.doc.User.Active)
+            @Html.HiddenFor(Model => Model.doc.User.Kind)
+           
+            
+          
+           
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Save" onclick="ClearToDel()" class="btn btn-default" />

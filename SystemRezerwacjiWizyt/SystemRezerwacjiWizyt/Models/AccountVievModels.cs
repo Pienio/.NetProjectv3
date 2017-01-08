@@ -14,7 +14,8 @@ namespace SystemRezerwacjiWizyt.Models
 
         [Required]
         [Display(Name = "PESEL")]
-      
+        [StringLength(11, ErrorMessage = "{0} musi mieć dokładnie 11 cyfr.", MinimumLength = 11)]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Pesel może zawierać tylko cyfry")]
         public string Pesel { get; set; }
 
         [Required]
@@ -27,20 +28,29 @@ namespace SystemRezerwacjiWizyt.Models
 
     public class EditUserVievModel
     {
-      public  User usr  {get;set;}
+        [Required]
+        public  User usr  {get;set;}
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Hasło")]
         public string password { get; set; }
     }
 
     public class TokenConfirmationViewModel
     {
+        [Required]
         public string Token { get; set; }
+        [Required]
+        [System.ComponentModel.DataAnnotations.Compare("Token", ErrorMessage = "Nieprawidłowy Token!")]
         public string ToWrite { get; set; }
 
     }
 
     public class RequestRefuse
     {
+        [Required]
         public int RequestID { get; set; }
+        [Required]
         public string Reason { get; set; }
     }
     public class EditDoctorViewModel
@@ -48,13 +58,14 @@ namespace SystemRezerwacjiWizyt.Models
         [Required]
         public Doctor doc { get; set; }
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 1)]
+        [StringLength(100, ErrorMessage = "{0} musi mieć przynajmniej {2} znaków.", MinimumLength = 6)]
         [DataType(DataType.Password)]
+        [Display(Name = "Hasło")]
         public string password { get; set; }
 
         public List<Specialization> SpecToChoose { get; set; }
-
-        public int SpecId { get; set; }
+        
+        public int? SpecId { get; set; }
 
         public IEnumerable<string> SelectedSpec { get; set; }
 
@@ -63,26 +74,31 @@ namespace SystemRezerwacjiWizyt.Models
     public class RegisterUserVievModel
     {
         [Required]
-        
+        [Display(Name = "PESEL")]
+        [StringLength(11, ErrorMessage = "{0} musi mieć dokładnie 11 cyfr.", MinimumLength = 11)]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Pesel może zawierać tylko cyfry")]
         public string PESEL { get; set; }
         [Required]
-        
+        [StringLength(100, ErrorMessage = "{0} musi mieć przynajmniej {2} znaków.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Hasło")]
         public string Password { get; set; }
 
         [Required]
-
+        [StringLength(100, ErrorMessage = "{0} musi mieć przynajmniej {2} znaków.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Hasła się nie zgadzają, wprowadź je ponownie!")]
+        [Display(Name = "Powtórz hasło")]
         public string PasswordAgain { get; set; }
         [Required]
        
-        public virtual PersonName Name { get; set; } = new PersonName();
+        public  PersonName Name { get; set; } = new PersonName();
+
+
         [Required]
-      
-        public DocOrPat Kind { get; set; }
-        [Required]
-      
-        public bool Active { get; set; } = true;
-        [Required]
-     
+        [RegularExpression(@"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                        @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                        @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$", ErrorMessage = "Wprowadź poprawny email")]
         public string Mail { get; set; }
         
 
@@ -95,7 +111,7 @@ namespace SystemRezerwacjiWizyt.Models
         
         public List<Specialization> SpecToChoose { get; set; }
 
-        public int SpecId { get; set; }
+        public int? SpecId { get; set; }
 
         public IEnumerable<string> SelectedSpec { get; set; }
     }

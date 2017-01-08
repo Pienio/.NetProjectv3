@@ -35,10 +35,19 @@
                 @Html.ValidationMessageFor(model => model.usr.Mail, "", new { @class = "text-danger" })
             </div>
         </div>
+        @Html.HiddenFor(model=>model.usr.PESEL)
+        @Html.HiddenFor(model => model.usr.Password)
+        <div style="visibility: hidden" >
+            @Html.HiddenFor(Model => Model.usr.Active)
+          
+            @Html.HiddenFor(Model => Model.usr.Kind)
+           
+        </div>
+
         <div class="form-group">
             Aby zatwierdzić zmiany wprowadź hasło:
             <div class="col-md-10">
-                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
             </div>
         </div>

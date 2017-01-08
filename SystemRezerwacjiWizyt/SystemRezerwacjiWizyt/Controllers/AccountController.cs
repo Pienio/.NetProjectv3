@@ -121,6 +121,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 var docold = db.Doctors.Find(a.OldProfile.Key);
                 var docnew = db.Doctors.Find(a.NewProfile.Key);
                 docold.CopyFrom(docnew);
+                docold.ProfileAccepted = true;
                 db.Doctors.Remove(docnew);
                 db.Requests.Remove(a);
                 db.Commit();
@@ -182,6 +183,10 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeclineRequestsReason(RequestRefuse model, string returnUrl)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             if (Session["User"] is Admin)
             {
                 if (model.Reason == null)
@@ -240,7 +245,11 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditPatient(EditUserVievModel model, string returnUrl)
         {
-
+            if (!ModelState.IsValid)
+            {
+                
+                return View(model);
+            }
             ViewBag.ReturnUrl = returnUrl;
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Home");
@@ -284,16 +293,18 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditDoctor(EditDoctorViewModel model, string returnUrl,string Del )
         {
+            model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+           
 
             ViewBag.ReturnUrl = returnUrl;
-            model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+          //  model.SpecToChoose = db.Specializations.Select(p => p).ToList();
             List<Specialization> nowaa = new List<Specialization>();
             foreach (var specialization in model.doc.Specialization)
             {
                 var sdf = db.Specializations.Select(p => p).First(p => p.Name == specialization.Name);
                 nowaa.Add(sdf);
             }
-            if (model.SpecId != 0)
+            if (model.SpecId!=null&&model.SpecId != 0)
             {
                 Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
 
@@ -347,6 +358,10 @@ namespace SystemRezerwacjiWizyt.Controllers
                 return View(model);
             }
 
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Home");
             Doctor a = Session["User"] as Doctor;
@@ -414,8 +429,18 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterPatient(RegisterUserVievModel model, string returnUrl)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             ViewBag.ReturnUrl = returnUrl;
-           // db.BeginTransaction();
+            var a = db.Users.Select(p => p).Where(p => p.PESEL == model.PESEL);
+            if (a.Count() != 0)
+            {
+                ViewBag.Error = "Użytkownik o podanym Peselu już istnieje";
+                return View(model);
+            }
+            // db.BeginTransaction();
             Patient d= new Patient();
             d.User=new User();
             d.User.Name = model.Name;
@@ -446,10 +471,14 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterPatientToken(TokenConfirmationViewModel model, string returnUrl)
         {
-            if (model.Token != model.ToWrite)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
+            //if (model.Token != model.ToWrite)
+            //{
+            //    return View(model);
+            //}
             var Patient = Session["TMP"] as Patient;
             db.BeginTransaction();
             db.Patients.Add(Patient);
@@ -480,10 +509,14 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterDoctorToken(TokenConfirmationViewModel model, string returnUrl)
         {
-            if (model.Token != model.ToWrite)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
+            //if (model.Token != model.ToWrite)
+            //{
+            //    return View(model);
+            //}
             var Doctor = Session["TMP"] as Doctor;
             ProfileRequest now = new ProfileRequest();
             Doctor.ProfileAccepted = false;
@@ -506,6 +539,10 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl )
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             ViewBag.ReturnUrl = returnUrl;
             model.SpecToChoose = db.Specializations.Select(p => p).ToList();
             List<Specialization> nowaa = new List<Specialization>();
@@ -514,7 +551,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 var sdf = db.Specializations.Select(p => p).First(p => p.Name == specialization.Name);
                 nowaa.Add(sdf);
             }
-            if (model.SpecId != 0)
+            if (model.SpecId!=null&&model.SpecId != 0)
             {
                 Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
 
@@ -569,14 +606,21 @@ namespace SystemRezerwacjiWizyt.Controllers
             }
 
 
-
-
-
-            if (model.Password == model.PasswordAgain)
+            var a = db.Users.Select(p => p).Where(p => p.PESEL == model.PESEL);
+            if (a.Count() != 0)
             {
-                
-            
-          //  db.BeginTransaction();
+                ViewBag.Error = "Użytkownik o podanym Peselu już istnieje";
+                return View(model);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+
+
+            //  db.BeginTransaction();
             Doctor d = new Doctor();
             d.User = new User();
             d.User.Name = model.Name;
@@ -598,12 +642,8 @@ namespace SystemRezerwacjiWizyt.Controllers
                 // return RedirectToAction("Index", "Home");
                 Session["TMP"] = d;
                 return RedirectToAction("RegisterDoctorToken", "Account");
-            }
-            else
-            {
-                ViewBag.Mess = "Hasła muszą być takie same";
-                return View(model);
-            }
+            
+          
             
         }
 
