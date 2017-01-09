@@ -35,7 +35,7 @@ namespace SystemRezerwacjiWizyt.Controllers
         //
         // POST: /Account/Login
         [HttpPost]
-      //  [AllowAnonymous]
+        //  [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
@@ -56,8 +56,8 @@ namespace SystemRezerwacjiWizyt.Controllers
                 if (c.Kind == DocOrPat.Doctor)
                 {
                     Session["User"] = db.Doctors.First(p => p.User.Key == c.Key);
-                }    
-                else if(c.Kind == DocOrPat.Patient)
+                }
+                else if (c.Kind == DocOrPat.Patient)
                 {
                     Session["User"] = db.Patients.First(p => p.User.Key == c.Key);
                 }
@@ -69,7 +69,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 //Session["User"] = c;
 
             }
-            
+
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             return RedirectToAction("Index", "Home");
@@ -98,7 +98,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             }
         }
 
-        public ActionResult AcceptRequests(int ID,string returnUrl)
+        public ActionResult AcceptRequests(int ID, string returnUrl)
         {
             if (Session["User"] is Admin)
             {
@@ -127,13 +127,14 @@ namespace SystemRezerwacjiWizyt.Controllers
                 db.Commit();
                 tosend.SendAcceptationEditMail(docold.User.Mail);
                 lista = db.Requests.Select(p => p).ToList();
-                return View("Requests",lista);
+                return View("Requests", lista);
             }
             else
             {
                 return RedirectToAction("Index", "Home");
             }
         }
+
         public ActionResult DeclineRequests(int ID, string returnUrl)
         {
             if (Session["User"] is Admin)
@@ -161,10 +162,10 @@ namespace SystemRezerwacjiWizyt.Controllers
                 //db.Commit();
                 //lista = db.Requests.Select(p => p).ToList();
                 //return View("Requests", lista);
-                RequestRefuse nn=new RequestRefuse();
+                RequestRefuse nn = new RequestRefuse();
                 nn.RequestID = ID;
                 Session["RequestRefuse"] = nn;
-               return RedirectToAction("DeclineRequestsReason");
+                return RedirectToAction("DeclineRequestsReason");
                 //return View("DeclineRequestsReason",nn);
             }
             else
@@ -179,7 +180,8 @@ namespace SystemRezerwacjiWizyt.Controllers
             ;
             return View(nn);
         }
-        [HttpPost]       
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeclineRequestsReason(RequestRefuse model, string returnUrl)
         {
@@ -201,8 +203,8 @@ namespace SystemRezerwacjiWizyt.Controllers
                     db.Doctors.Remove(doc);
                     db.Requests.Remove(a);
                     db.Commit();
-                   
-                    tosend.SendRejectionMail(doc.User.Mail,model.Reason);
+
+                    tosend.SendRejectionMail(doc.User.Mail, model.Reason);
                     lista = db.Requests.Select(p => p).ToList();
                     return View("Requests", lista);
 
@@ -214,8 +216,8 @@ namespace SystemRezerwacjiWizyt.Controllers
                 db.Doctors.Remove(docnew);
                 db.Requests.Remove(a);
                 db.Commit();
-               // MailServices tosend = new MailServices();
-                tosend.SendEditRejectionMail(docold.User.Mail,model.Reason);
+                // MailServices tosend = new MailServices();
+                tosend.SendEditRejectionMail(docold.User.Mail, model.Reason);
                 lista = db.Requests.Select(p => p).ToList();
                 return View("Requests", lista);
             }
@@ -223,7 +225,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            
+
         }
 
         public ActionResult EditPatient(string returnUrl)
@@ -240,14 +242,15 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             return View(b);
         }
+
         [HttpPost]
-       
+
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditPatient(EditUserVievModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
-                
+
                 return View(model);
             }
             ViewBag.ReturnUrl = returnUrl;
@@ -265,7 +268,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             var pat = db.Patients.Find(a.Key);
             pat.User.Name = model.usr.Name;
             pat.User.Mail = model.usr.Mail;
-          
+
             //pat.User.Password = a.User.Password;
             db.Commit();
 
@@ -275,11 +278,11 @@ namespace SystemRezerwacjiWizyt.Controllers
 
         public ActionResult EditDoctor(string returnUrl)
         {
-           
+
             ViewBag.ReturnUrl = returnUrl;
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Home");
-            Doctor a= Session["User"] as Doctor;
+            Doctor a = Session["User"] as Doctor;
             EditDoctorViewModel b = new EditDoctorViewModel();
             b.doc = new Doctor();
             b.password = "";
@@ -288,31 +291,31 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             return View(b);
         }
-       
-        [HttpPost]     
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditDoctor(EditDoctorViewModel model, string returnUrl,string Del )
+        public async Task<ActionResult> EditDoctor(EditDoctorViewModel model, string returnUrl, string Del)
         {
             model.SpecToChoose = db.Specializations.Select(p => p).ToList();
-           
+
 
             ViewBag.ReturnUrl = returnUrl;
-          //  model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+            //  model.SpecToChoose = db.Specializations.Select(p => p).ToList();
             List<Specialization> nowaa = new List<Specialization>();
             foreach (var specialization in model.doc.Specialization)
             {
                 var sdf = db.Specializations.Select(p => p).First(p => p.Name == specialization.Name);
                 nowaa.Add(sdf);
             }
-            if (model.SpecId!=null&&model.SpecId != 0)
+            if (model.SpecId != null && model.SpecId != 0)
             {
                 Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
 
                 var abc = model.doc.Specialization.Select(p => p).Where(p => p.Name == toad.Name);
-              
+
                 if (abc.Count() == 0)
                 {
-                    
+
                     // Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
                     nowaa.Add((toad));
                     model.doc.Specialization = nowaa;
@@ -323,9 +326,9 @@ namespace SystemRezerwacjiWizyt.Controllers
                     model.doc.Specialization = nowaa;
                     ViewBag.Mess = "Nie możesz dodać dwóch takich samych specjalizacji";
                 }
-                
-               
-               // model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+
+
+                // model.SpecToChoose = db.Specializations.Select(p => p).ToList();
                 model.password = "";
                 model.SpecId = 0;
                 //Request.Form["SpecId"] = "";
@@ -337,21 +340,21 @@ namespace SystemRezerwacjiWizyt.Controllers
             {
                 if (model.SelectedSpec.Count() != model.doc.Specialization.Count)
                 {
-                    
-               
-                foreach (var VARIABLE in model.SelectedSpec)
-                {
-                    int key = Int32.Parse(VARIABLE);
-                    var todel = db.Specializations.Find(key);
-                    var todel1 = nowaa.Select(p => p).Where(p => p.Name == todel.Name).First();
-                    nowaa.Remove(todel1);
+
+
+                    foreach (var VARIABLE in model.SelectedSpec)
+                    {
+                        int key = Int32.Parse(VARIABLE);
+                        var todel = db.Specializations.Find(key);
+                        var todel1 = nowaa.Select(p => p).Where(p => p.Name == todel.Name).First();
+                        nowaa.Remove(todel1);
+                    }
                 }
-            }
 
 
-               
-               
-                
+
+
+
                 model.doc.Specialization = nowaa;
 
                 model.password = "";
@@ -365,7 +368,8 @@ namespace SystemRezerwacjiWizyt.Controllers
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Home");
             Doctor a = Session["User"] as Doctor;
-            if (string.IsNullOrEmpty(model.password)||a.User.Password != SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.password))
+            if (string.IsNullOrEmpty(model.password) ||
+                a.User.Password != SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.password))
             {
                 ViewBag.Message = "Błędne hasło";
                 return View(model);
@@ -401,11 +405,13 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
         public ActionResult Register(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+
         public ActionResult RegisterPatient(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -416,11 +422,11 @@ namespace SystemRezerwacjiWizyt.Controllers
         {
             ViewBag.ReturnUrl = returnUrl;
             var b = new RegisterDoctorViewModel();
-            b.doc= new Doctor();
+            b.doc = new Doctor();
             b.doc.ProfileAccepted = false;
-            b.doc.User= new User();
-            b.doc.User.Name=new PersonName();
-            b.doc.Specialization= new List<Specialization>();
+            b.doc.User = new User();
+            b.doc.User.Name = new PersonName();
+            b.doc.Specialization = new List<Specialization>();
             b.SpecToChoose = db.Specializations.Select(p => p).ToList();
             return View(b);
         }
@@ -441,32 +447,33 @@ namespace SystemRezerwacjiWizyt.Controllers
                 return View(model);
             }
             // db.BeginTransaction();
-            Patient d= new Patient();
-            d.User=new User();
+            Patient d = new Patient();
+            d.User = new User();
             d.User.Name = model.Name;
-            d.User.Kind=DocOrPat.Patient;
+            d.User.Kind = DocOrPat.Patient;
             d.User.Mail = model.Mail;
             d.User.PESEL = model.PESEL;
             d.User.Password = SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.Password);
-          //  db.Patients.Add(d);
-           // db.Commit();
-          //  var usr = db.Patients.Select(p => p).First(p => p.User.PESEL == model.PESEL);
-           // Session["User"] = usr;
+            //  db.Patients.Add(d);
+            // db.Commit();
+            //  var usr = db.Patients.Select(p => p).First(p => p.User.PESEL == model.PESEL);
+            // Session["User"] = usr;
             Session["TMP"] = d;
             return RedirectToAction("RegisterPatientToken", "Account");
         }
 
         public ActionResult RegisterPatientToken(string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;           
+            ViewBag.ReturnUrl = returnUrl;
             TokenConfirmationViewModel b = new TokenConfirmationViewModel();
             b.Token = Utils.Token.GetToken();
             b.ToWrite = "";
             var Patient = Session["TMP"] as Patient;
             MailServices tosend = new MailServices();
-            tosend.SendRegistrationConfirmation(Patient.User.Mail,b.Token);
+            tosend.SendRegistrationConfirmation(Patient.User.Mail, b.Token);
             return View(b);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterPatientToken(TokenConfirmationViewModel model, string returnUrl)
@@ -524,7 +531,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             now.NewProfile = Doctor;
 
             db.BeginTransaction();
-           // db.Doctors.Add(Doctor);
+            // db.Doctors.Add(Doctor);
             db.Requests.Add(now);
             //db.Doctors.Add(Doctor);
             db.Commit();
@@ -535,9 +542,10 @@ namespace SystemRezerwacjiWizyt.Controllers
             //tosend.SendAcceptationMail(usr.User.Mail);
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl )
+        public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -551,7 +559,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 var sdf = db.Specializations.Select(p => p).First(p => p.Name == specialization.Name);
                 nowaa.Add(sdf);
             }
-            if (model.SpecId!=null&&model.SpecId != 0)
+            if (model.SpecId != null && model.SpecId != 0)
             {
                 Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
 
@@ -573,7 +581,7 @@ namespace SystemRezerwacjiWizyt.Controllers
 
 
                 // model.SpecToChoose = db.Specializations.Select(p => p).ToList();
-                
+
                 model.SpecId = 0;
                 //Request.Form["SpecId"] = "";
                 return View(model);
@@ -601,7 +609,7 @@ namespace SystemRezerwacjiWizyt.Controllers
 
                 model.doc.Specialization = nowaa;
 
-               
+
                 return View(model);
             }
 
@@ -635,29 +643,30 @@ namespace SystemRezerwacjiWizyt.Controllers
             d.TuesdayWorkingTime = model.doc.TuesdayWorkingTime;
             d.WednesdayWorkingTime = model.doc.WednesdayWorkingTime;
             d.ProfileAccepted = false;
-                //  db.Doctors.Add(d);
-                //   db.Commit();
-                //    var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == model.PESEL);
-                //   Session["User"] = usr;
-                // return RedirectToAction("Index", "Home");
-                Session["TMP"] = d;
-                return RedirectToAction("RegisterDoctorToken", "Account");
-            
-          
-            
+            //  db.Doctors.Add(d);
+            //   db.Commit();
+            //    var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == model.PESEL);
+            //   Session["User"] = usr;
+            // return RedirectToAction("Index", "Home");
+            Session["TMP"] = d;
+            return RedirectToAction("RegisterDoctorToken", "Account");
+
+
+
         }
 
-     
+
         public ViewResult BlankEditorRow(string idd)
         {
-           // string spectoadd = SelectedSpec; //Request.Form["SelectedSpec"].ToString();
-           // int c = Int32.Parse(idd);
-           //// int c = id;
-           // Specialization toadd = db.Specializations.Select(p => p).Where(p => p.Key == c).First();
-           Specialization d = new Specialization();
+            // string spectoadd = SelectedSpec; //Request.Form["SelectedSpec"].ToString();
+            // int c = Int32.Parse(idd);
+            //// int c = id;
+            // Specialization toadd = db.Specializations.Select(p => p).Where(p => p.Key == c).First();
+            Specialization d = new Specialization();
             d.Name = "pupa";
             return View("_Specializations", d);
         }
+
         //private void SignInAsync(string name)
         //{
         //    var claims = new List<Claim>();
@@ -668,6 +677,44 @@ namespace SystemRezerwacjiWizyt.Controllers
         //    authenticationManager.SignIn(id);
         //}
 
+        public ActionResult PasswordReset()
+        {
+            PasswordResetViewModel a= new PasswordResetViewModel();
+            a.maill = "";
+            return View(a);
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PasswordReset(PasswordResetViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            db.BeginTransaction();
+            var a = db.Users.Select(p => p).Where(p => p.Mail == model.maill);
+            User b = null;
+            if (a.Count() != 0)
+                b = a.First();
+
+            
+            if (b != null)
+            {
+                string newPasssword = Utils.Token.GetToken();
+                b.Password = Utils.PasswordHasher.CreateHash(newPasssword);
+                MailServices tosend = new MailServices();
+                tosend.SendPasswordResetMail(b.Mail,newPasssword);
+                return RedirectToAction("Index", "Home");
+
+            }
+            else
+            {
+                ViewBag.Message = "NIe istnieje użytkownik o takim mailu";
+                return View();
+            }
+
+            
+        }
     }
 }

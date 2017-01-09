@@ -28,6 +28,18 @@ namespace MailService
                 "Aby potwierdzić rejestrację, wpisz w wymaganym polu dany token: " + token;
             SendMail(mailAddress, "Witamy w Systemie rezerwacji wizyt", "System rezerwacji wizyt", "Potwierdzenie rejestracji", content);
         }
+
+        public void SendPasswordResetMail(string mailAddress, string token)
+        {
+            string content = "Twoje hasło w Systemie Rezerwacji wizyt zostało pomyślnie zresetowane\n" +
+                "Twoje nowe hasło to: " + token;
+            SendMail(mailAddress, "Reset hasła", "System rezerwacji wizyt", "Nowe hasło", content);
+        }
+        public void SendMailToAdmin(string mailAddress, string content,string major)
+        {
+            
+            SendMail("sysrejwiz@gmail.com", major, "System rezerwacji wizyt", "Zapytanie", content + "\n \n Wysłane przez: "+mailAddress);
+        }
         public void SendEditConfirmation(string mailAddress, string token)
         {
             string content =

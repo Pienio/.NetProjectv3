@@ -104,6 +104,12 @@ namespace SystemRezerwacjiWizyt.Models
 
     }
 
+    public class PasswordResetViewModel
+    {
+        [Required]
+        public string maill { set; get; }
+    }
+
     public class RegisterDoctorViewModel : RegisterUserVievModel
     {
         [Required]

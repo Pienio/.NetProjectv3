@@ -28,7 +28,9 @@
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                
+                <div class="form-group">
+                    @Html.ActionLink("Zapomniane hasło?","PasswordReset","Account");
+                </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="submit" value="Log in" class="btn btn-default" />

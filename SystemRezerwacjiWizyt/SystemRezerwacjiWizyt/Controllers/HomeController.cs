@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using SystemRezerwacjiWizyt.Models;
 using DatabaseAccess;
 using DatabaseAccess.Model;
+using MailService;
 
 namespace SystemRezerwacjiWizyt.Controllers
 {
@@ -22,6 +24,26 @@ namespace SystemRezerwacjiWizyt.Controllers
             b.docs = a;
             b.specs = db.Specializations.Select(p => p).ToList();
             return View(b);
+        }
+
+        public ActionResult SendMailToAdmin()
+        {
+            SendMailToAdminViewModel m= new SendMailToAdminViewModel();
+            if (Session["User"] != null)
+            {
+                Person a = Session["User"] as Person;
+                m.Mail = a.User.Mail;
+            }
+            return View(m);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SendMailToAdmin(SendMailToAdminViewModel model)
+        {
+
+            MailServices tosend = new MailServices();
+            tosend.SendMailToAdmin(model.Mail,model.Content,model.Major);
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Search(IndexHomeViewModels model)

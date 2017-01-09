@@ -247,6 +247,8 @@
     <Content Include="Views\Account\DeclineRequestsReason.cshtml" />
     <Content Include="Views\Specializations\Index.cshtml" />
     <Content Include="Views\Specializations\AddSpec.cshtml" />
+    <Content Include="Views\Home\SendMailToAdmin.cshtml" />
+    <Content Include="Views\Account\PasswordReset.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
