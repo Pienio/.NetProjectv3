@@ -547,12 +547,10 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-            ViewBag.ReturnUrl = returnUrl;
             model.SpecToChoose = db.Specializations.Select(p => p).ToList();
+         
+            ViewBag.ReturnUrl = returnUrl;
+           
             List<Specialization> nowaa = new List<Specialization>();
             foreach (var specialization in model.doc.Specialization)
             {
@@ -613,7 +611,10 @@ namespace SystemRezerwacjiWizyt.Controllers
                 return View(model);
             }
 
-
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
             var a = db.Users.Select(p => p).Where(p => p.PESEL == model.PESEL);
             if (a.Count() != 0)
             {
