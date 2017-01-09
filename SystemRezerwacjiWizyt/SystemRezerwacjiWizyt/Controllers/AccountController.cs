@@ -493,7 +493,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             var usr = db.Patients.Select(p => p).First(p => p.User.PESEL == Patient.User.PESEL);
             Session["User"] = usr;
             MailServices tosend = new MailServices();
-            tosend.SendAcceptationMail(usr.User.Mail);
+            //tosend.SendAcceptationMail(usr.User.Mail);
             return RedirectToAction("Index", "Home");
         }
 
