@@ -180,7 +180,7 @@ namespace UnitTestProject1
             doc.Specialization = new List<Specialization>();
             doc.Specialization.Add(spec);
             db.Doctors.Add(doc);
-            var a = db.Doctors.Find()
+            var a = db.Doctors.Find();
             //SystemRezerwacjiWizyt.Models.RegisterDoctorViewModel newdoc = new RegisterDoctorViewModel();
             //newdoc.doc = doc;
             //newdoc.SpecId = 1;
