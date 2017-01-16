@@ -104,6 +104,7 @@ namespace UnitTestProject1
 
             var c = new SystemRezerwacjiWizyt.Controllers.HomeController();
             IndexHomeViewModels nw = new IndexHomeViewModels();
+            
             nw.Text = names[d] + " " + surnames[d];
             nw.SelSPec = d;
             var g = c.Search(nw);
@@ -260,6 +261,8 @@ namespace UnitTestProject1
 
         }
 
+
+
         [TestMethod]
         public void CheckAddandDeleteVisit()
         {
@@ -282,7 +285,30 @@ namespace UnitTestProject1
             dd.Doctor = c;
             dd.Spec = c.Specialization.First();
             dd.Date = DateTime.Now;
-            dd.
+            d.Visits.Add(dd);
+            c.Visits.Add(dd);
+            db.BeginTransaction();
+            db.Visits.Add(dd);
+            db.Commit();
+            var k = db.Visits.Select(p => p).Where(p => p.Doctor.Key == c.Key);
+            if(k==null||k.Count()==0)
+                Assert.Fail();
+            var vd = k.First();
+            db.BeginTransaction();
+            var patt = db.Patients.Find(vd.Patient.Key);
+            var docc = db.Doctors.Find(vd.Doctor.Key);
+            patt.Visits.Remove(vd);
+            docc.Visits.Remove(vd);
+            db.Visits.Remove(vd);
+            db.Commit();
+             k = db.Visits.Select(p => p).Where(p => p.Doctor.Key == c.Key);
+            if (k.Count() != 0)
+                Assert.Fail();
+
+            db.BeginTransaction();
+            db.Patients.Remove(patt);
+            db.Doctors.Remove(docc);
+            db.Commit();
 
 
 

@@ -202,6 +202,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                     db.BeginTransaction();
                     var doc = db.Doctors.Find(a.NewProfile.Key);
                     string mail = doc.User.Mail;
+                    db.Users.Remove(doc.User);
                     db.Doctors.Remove(doc);
                     db.Requests.Remove(a);
                     db.Commit();
@@ -215,7 +216,9 @@ namespace SystemRezerwacjiWizyt.Controllers
                 var docold = db.Doctors.Find(a.OldProfile.Key);
                 var docnew = db.Doctors.Find(a.NewProfile.Key);
                 docold.ProfileAccepted = true;
+                db.Users.Remove(docnew.User);
                 db.Doctors.Remove(docnew);
+                
                 db.Requests.Remove(a);
                 db.Commit();
                 // MailServices tosend = new MailServices();
