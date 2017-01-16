@@ -147,16 +147,34 @@ namespace SystemRezerwacjiWizyt.Controllers
             if (Session["User"] is Doctor)
             {
                 Doctor p = Session["User"] as Doctor;
-                List<Visit> lista = p.Visits.ToList();
+                List<Visit> lista = p.Visits.Select(s=>s).Where(s=>s.Date>DateTime.Now).ToList();
                 return View(lista);
             }
             else
             {
                 Patient pat = Session["User"] as Patient;
-                List<Visit> lista = pat.Visits.ToList();
+                List<Visit> lista = pat.Visits.Select(s => s).Where(s => s.Date > DateTime.Now).ToList();
                 return View(lista);
             }
            
         }
+
+        public ActionResult ShowArchiwalVisits()
+        {
+            if (Session["User"] is Doctor)
+            {
+                Doctor p = Session["User"] as Doctor;
+                List<Visit> lista = p.Visits.Select(s => s).Where(s => s.Date < DateTime.Now).ToList();
+                return View("ShowVisits",lista);
+            }
+            else
+            {
+                Patient pat = Session["User"] as Patient;
+                List<Visit> lista = pat.Visits.Select(s => s).Where(s => s.Date < DateTime.Now).ToList();
+                return View("ShowVisits", lista);
+            }
+        }
+
+
     }
 }
