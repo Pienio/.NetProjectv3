@@ -110,6 +110,35 @@ namespace SystemRezerwacjiWizyt.Models
         public string maill { set; get; }
     }
 
+    public class ChangePassword
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "{0} musi mieć przynajmniej {2} znaków.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Hasło")]
+        public string password { set; get; }
+        [Required]
+        [StringLength(100, ErrorMessage = "{0} musi mieć przynajmniej {2} znaków.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Hasło")]
+        public string newpass { set; get; }
+        [Required]
+        [StringLength(100, ErrorMessage = "{0} musi mieć przynajmniej {2} znaków.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [System.ComponentModel.DataAnnotations.Compare("newpass", ErrorMessage = "Hasła się nie zgadzają, wprowadź je ponownie!")]
+        [Display(Name = "Hasło")]
+        public string newpass1 { set; get; }
+    }
+
+    public class AccountDelete
+    {
+        [Required]
+        [StringLength(100, ErrorMessage = "{0} musi mieć przynajmniej {2} znaków.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Hasło")]
+        public string password { set; get; }
+    }
+
     public class RegisterDoctorViewModel : RegisterUserVievModel
     {
         [Required]

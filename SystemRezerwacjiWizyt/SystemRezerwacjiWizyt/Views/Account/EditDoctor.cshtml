@@ -264,7 +264,8 @@
             @Html.HiddenFor(Model => Model.doc.User.Active)
             @Html.HiddenFor(Model => Model.doc.User.Kind)
            
-            
+            @Html.ActionLink("Zmień hasło", "ChangePassword", "Account")
+            @Html.ActionLink("Usuń konto","DeleteAccount","Account")
           
            
             <div class="form-group">

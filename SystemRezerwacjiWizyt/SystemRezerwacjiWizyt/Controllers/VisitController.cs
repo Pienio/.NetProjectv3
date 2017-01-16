@@ -105,8 +105,9 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             db.BeginTransaction();
             Patient pat = Session["User"] as Patient;
+            Specialization specc = db.Specializations.Find(model.SelectedSpec);
             Visit toAdd = new Visit(pat, a, model.DateToChoose[model.ChosenDate - 1].date,
-                a.Specialization[model.SelectedSpec - 1]);
+                specc);
                 a.Visits.Add(toAdd);
                 pat.Visits.Add(toAdd);
 

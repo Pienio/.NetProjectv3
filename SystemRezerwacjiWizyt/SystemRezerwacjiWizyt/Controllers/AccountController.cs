@@ -48,6 +48,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             if (a.Count() == 0)
             {
                 ViewBag.Error = "Nieprawidłowy Pesel lub hasło";
+                return View();
             }
             else
             {
@@ -508,8 +509,80 @@ namespace SystemRezerwacjiWizyt.Controllers
             tosend.SendRegistrationConfirmation(Doctor.User.Mail, b.Token);
             return View(b);
         }
+        public ActionResult ChangePassword(string returnUrl)
+        {
+
+            return View();
+        }
+
+        [HttpPost]
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(SystemRezerwacjiWizyt.Models.ChangePassword model, string returnUrl)
+        {
+            if (!ModelState.IsValid || Session["User"] == null)
+            {
+                return View();
+            }
+            var a = Session["User"] as Person;
+            if (Utils.PasswordHasher.CreateHash(model.password) == a.User.Password)
+            {
+                
+                db.BeginTransaction();
+                var usr = db.Users.Find(a.User.Key);
+                usr.Password = Utils.PasswordHasher.CreateHash(model.newpass);
+                db.Commit();
+                if (a.User.Kind == DocOrPat.Doctor)
+                {
+                    Session["User"] = db.Doctors.Select(p => p).First(p => p.User.Key == a.User.Key);
+                }
+                else
+                {
+                    Session["User"] = db.Patients.Select(p => p).First(p => p.User.Key == a.User.Key);
+                }
+            }
 
 
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult DeleteAccount(string returnUrl)
+        {
+            
+            return View();
+        }
+        [HttpPost]
+
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteAccount(AccountDelete model, string returnUrl)
+        {
+            if (!ModelState.IsValid||Session["User"] == null)
+            {
+                return View();
+            }
+
+            var a = Session["User"] as Person;
+            if (Utils.PasswordHasher.CreateHash(model.password) == a.User.Password)
+            {
+                if (a.User.Kind == DocOrPat.Doctor)
+                {
+                    var doc = db.Doctors.Select(p => p).First(p => p.User.Key == a.User.Key);
+                    db.BeginTransaction();
+                    db.Doctors.Remove(doc);
+                    db.Commit();
+
+                }
+                else
+                {
+                    var pat = db.Patients.Select(p => p).First(p => p.User.Key == a.User.Key);
+                    db.BeginTransaction();
+                    db.Patients.Remove(pat);
+                    db.Commit();
+                }
+                Session["User"] = null;
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
 
         [HttpPost]
