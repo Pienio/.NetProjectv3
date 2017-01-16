@@ -40,7 +40,7 @@ namespace SystemRezerwacjiWizyt.Models
                 var sp = db.Specializations.Find(ID);
                 var specs =
                   db.Specializations.ToList();
-                if (sp.Doctors.Count != 0)
+                if (sp.Doctors.Count==null||sp.Doctors.Count != 0)
                 {
                     ViewBag.MSG = "Nie możesz usunąć tej specjalizacji, istnieje doktor który ją ma";
                     return View("Index", specs);
@@ -48,7 +48,8 @@ namespace SystemRezerwacjiWizyt.Models
                 db.BeginTransaction();
                 db.Specializations.Remove(sp);
                 db.Commit();
-               
+                 specs =
+                   db.Specializations.ToList();
                 return View("Index", specs);
             }
             return RedirectToAction("Index", "Home");

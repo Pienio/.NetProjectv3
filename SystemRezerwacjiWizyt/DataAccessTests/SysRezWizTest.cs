@@ -202,11 +202,12 @@ namespace UnitTestProject1
            
             db.BeginTransaction();
             var doccc = a.First();
+            long f = doccc.Key;
             db.Users.Remove(doccc.User);
             db.Doctors.Remove(doccc);
             db.Commit();
-            var aa = db.Doctors.Select(p => p).Where(p => p.User.PESEL == doc.User.PESEL).ToList();
-            if(aa.Count()!=0)
+            var aa = db.Doctors.Find(f);
+            if(aa!=null)
                 Assert.Fail();
             //SystemRezerwacjiWizyt.Models.RegisterDoctorViewModel newdoc = new RegisterDoctorViewModel();
             //newdoc.doc = doc;
@@ -246,17 +247,20 @@ namespace UnitTestProject1
             var doc = TestingExtension.GetPatient();
             db.BeginTransaction();
             db.Patients.Add(doc);
-
-            var c = db.Patients.Select(p=>p).Where(p=>p.User.PESEL==doc.User.PESEL);
+            db.Commit();
+            string psl = doc.User.PESEL;
+            var c = db.Patients.Select(p=>p).Where(p=>p.User.PESEL==psl);
             if (c == null || c.Count() == 0)
                 Assert.Fail();
 
 
             db.BeginTransaction();
+            long f = c.First().Key;
+            db.Users.Remove(c.First().User);
             db.Patients.Remove(c.First());
             db.Commit();
-            c = db.Patients.Select(p => p).Where(p => p.User.PESEL == doc.User.PESEL);
-            if (c.Count() != 0)
+            var cc = db.Patients.Find(f);
+            if (cc != null)
                 Assert.Fail();
 
 
@@ -309,6 +313,8 @@ namespace UnitTestProject1
                 Assert.Fail();
 
             db.BeginTransaction();
+            db.Users.Remove(patt.User);
+            db.Users.Remove(docc.User);
             db.Patients.Remove(patt);
             db.Doctors.Remove(docc);
             db.Commit();
