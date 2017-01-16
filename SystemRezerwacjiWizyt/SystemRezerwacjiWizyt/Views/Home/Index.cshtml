@@ -36,11 +36,11 @@
 <div style="margin: 10px">
     @if (ViewBag.Message != null)
     {
-        <h5 style="padding: 10px; background-color: bisque; margin-left: 0">@ViewBag.Message</h5>
+        <div class="alert alert-success">@ViewBag.Message</div>
     }
     @if (ViewBag.Error != null)
     {
-        <h5 style="padding: 10px; background-color: salmon; margin-left: 0">@ViewBag.Error</h5>
+        <div class="alert alert-danger">@ViewBag.Error</div>
     }
     <div style="display: inline-block">
         <table>

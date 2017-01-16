@@ -779,13 +779,13 @@ namespace SystemRezerwacjiWizyt.Controllers
                 b.Password = Utils.PasswordHasher.CreateHash(newPasssword);
                 MailServices tosend = new MailServices();
                 tosend.SendPasswordResetMail(b.Mail, newPasssword);
+                db.Commit();
                 return RedirectToAction("Index", "Home");
 
             }
-            ViewBag.Message = "NIe istnieje użytkownik o takim mailu";
+            db.Commit();
+            ViewBag.Message = "Nie istnieje użytkownik o takim mailu";
             return View();
-
-
         }
     }
 }

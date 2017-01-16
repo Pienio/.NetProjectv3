@@ -29,7 +29,7 @@
                     }
                     if (@a.Date < DateTime.Now)
                     {
-                        <td>@Html.ActionLink("Oceń", "AddOpinion", "Account", new { id = @a.Doctor.Key }, null)</td>
+                        <td>@Html.ActionLink("Oceń", "AddOpinion", "Opinion", new { id = @a.Doctor.Key }, null)</td>
                     }
                 }
                 else if (Session["User"] is Doctor)

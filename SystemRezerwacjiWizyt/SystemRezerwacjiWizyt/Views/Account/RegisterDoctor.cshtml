@@ -127,7 +127,7 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">Godziny pracy</label>
                     <hr />
-                    <div class="form-group" style="border-width: 1px;">
+                    <div class="form-group">
                         <label class="control-label col-md-3">Poniedziałek</label>
                         <div class="col-md-9">
                             @Html.EditorFor(model => model.doc.MondayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
@@ -174,7 +174,7 @@
                     </div>
                 </div>
                     <div class="form-group">
-                        <div class="col-md-offset-2 col-md-19">
+                        <div class="col-md-offset-2 col-md-9">
                             <input type="submit" onclick="ClearAll()" value="Zarejestruj się" class="btn btn-default" />
                         </div>
                 </div>

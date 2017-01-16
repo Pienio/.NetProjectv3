@@ -21,8 +21,10 @@ namespace SystemRezerwacjiWizyt.Models
         public bool GetNextWeek { get; set; }
 
         public bool GetPasttWeek { get; set; }
-        
 
+        public DateTime FirstDay { get; set; }
+
+        public DateTime LastDay { get; set; }
     }
 
     public class DateTimeExt
