@@ -98,17 +98,17 @@
                         @Html.ListBoxFor(model => model.SelectedSpec, new SelectList(DocSpecList, "Key", "Name"), new {size = @DocSpecList.Count, id = "SpecToDel", @class = "form-control"})
                         <input type="submit" value="Usuń" onclick="ClearToAdd()" class="btn btn-default"/>
                     </div>
-                    <!--ul id="Specs">
+                    <ul id="Specs">
                     @for (int i = 0; i < Model.doc.Specialization.Count(); i++)
                     {
-                        <li>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</li>
+                        @*<li>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</li>*@
                             @*<li><input type="submit" value="Delete" class="btn btn-default"/></li>*@
                         @Html.HiddenFor(m => m.doc.Specialization[i].Name)
                         //{
                         //    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", Model.doc.Specialization[i]);
                         //}
                     }
-                    </ul-->
+                    </ul>
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.Mail, htmlAttributes: new { @class = "control-label col-md-2" })

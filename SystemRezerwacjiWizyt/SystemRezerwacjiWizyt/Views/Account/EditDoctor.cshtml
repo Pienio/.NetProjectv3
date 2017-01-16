@@ -192,17 +192,7 @@
                 @Html.ListBoxFor(model => model.SelectedSpec, new SelectList(DocSpecList, "Key", "Name"), new { size = @DocSpecList.Count, id="SpecToDel" })
                 <input type="submit" value="Usuń" onclick="ClearToAdd()" class="btn btn-default" />
                 <ul id="Specs">
-                    @for (int i = 0; i < Model.doc.Specialization.Count(); i++)
-                {
-
-                        <li>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</li>
-                        @*<li><input type="submit" value="Delete" class="btn btn-default"/></li>*@
-                        @Html.HiddenFor(m => m.doc.Specialization[i].Name)
-                        //{
-                        //    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", Model.doc.Specialization[i]);
-                        //}
-
-                    }
+                  
 
 
 
@@ -279,6 +269,17 @@
                 @Html.HiddenFor(Model => Model.doc.User.Active)
                 @Html.HiddenFor(Model => Model.doc.User.Kind)
 
+                @for (int i = 0; i < Model.doc.Specialization.Count(); i++)
+                {
+
+                    @*<li>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</li>*@
+                        @*<li><input type="submit" value="Delete" class="btn btn-default"/></li>*@
+                        @Html.HiddenFor(m => m.doc.Specialization[i].Name)
+                    //{
+                    //    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", Model.doc.Specialization[i]);
+                    //}
+
+                }
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="submit" value="Save" onclick="ClearToDel()" class="btn btn-default" />
