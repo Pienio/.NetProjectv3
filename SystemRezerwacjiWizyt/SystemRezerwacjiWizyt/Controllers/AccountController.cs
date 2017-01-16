@@ -346,7 +346,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                     foreach (var VARIABLE in model.SelectedSpec)
                     {
                         int key = Int32.Parse(VARIABLE);
-                        var todel = db.Specializations.Find(key);
+                        var todel = model.doc.Specialization[key];
                         var todel1 = nowaa.Select(p => p).Where(p => p.Name == todel.Name).First();
                         nowaa.Remove(todel1);
                     }
@@ -756,7 +756,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                     foreach (var VARIABLE in model.SelectedSpec)
                     {
                         int key = Int32.Parse(VARIABLE);
-                        var todel = db.Specializations.Find(key);
+                        var todel = model.doc.Specialization[key];//db.Specializations.Find(key);
                         var todel1 = nowaa.Select(p => p).Where(p => p.Name == todel.Name).First();
                         nowaa.Remove(todel1);
                     }
