@@ -19,15 +19,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    <link rel="stylesheet" href="~/Content/custom.css"/>
+    <link rel="stylesheet" href="~/Content/custom.css" />
     @*<script type="text/javascript" src="~/Rating/rating.js"></script>
-    <link rel="stylesheet" type="text/css" href="~/Rating/rating.css" />
-    <script type="text/javascript">
-        $(function ()
-        {
-            $('.rating').rating();
-        });
-    </script>*@
+        <link rel="stylesheet" type="text/css" href="~/Rating/rating.css" />
+        <script type="text/javascript">
+            $(function ()
+            {
+                $('.rating').rating();
+            });
+        </script>*@
 </head>
 <body>
 
@@ -51,30 +51,35 @@
                     }
                     else
                     {
-                        <li>Hello @LoggedIn.User.Name.ToString()</li>
-                        <li>@Html.ActionLink("Wyloguj", "LogOut", "Account")</li>
-                        if (LoggedIn is Doctor)
-                        {
-                            <li>@Html.ActionLink("Edytuj konto", "EditDoctor", "Account")</li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Witaj, @LoggedIn.User.Name.ToString() <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                @if (LoggedIn is Doctor)
+                                {
+                                    <li>@Html.ActionLink("Edytuj konto", "EditDoctor", "Account")</li>
 
-                        }
-                        if (LoggedIn is Patient)
-                        {
-                            <li>@Html.ActionLink("Edytuj konto", "EditPatient", "Account")</li>
+                                }
+                                @if (LoggedIn is Patient)
+                                {
+                                    <li>@Html.ActionLink("Edytuj konto", "EditPatient", "Account")</li>
 
-                        }
-                        if (LoggedIn is Admin)
-                        {
-                            <li>@Html.ActionLink("Prośby", "Requests", "Account")</li>
-                            <li>@Html.ActionLink("Specjalizacje", "Index", "Specializations")</li>
+                                }
+                                @if (LoggedIn is Admin)
+                                {
+                                    <li>@Html.ActionLink("Prośby", "Requests", "Account")</li>
+                                    <li>@Html.ActionLink("Specjalizacje", "Index", "Specializations")</li>
 
-                        }
+                                }
 
-                        if (LoggedIn is Doctor || LoggedIn is Patient)
-                        {
+                                @if (LoggedIn is Doctor || LoggedIn is Patient)
+                                {
 
-                            <li>@Html.ActionLink("Twoje Wizyty", "ShowVisits", "Visit")</li>
-                        }
+                                    <li>@Html.ActionLink("Twoje wizyty", "ShowVisits", "Visit")</li>
+                                }
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("Wyloguj", "LogOut", "Account")</li>
+                            </ul>
+                        </li>
 
                     }
                     <li>@Html.ActionLink("Wyślij e-mail do admina", "SendMailToAdmin", "Home")</li>

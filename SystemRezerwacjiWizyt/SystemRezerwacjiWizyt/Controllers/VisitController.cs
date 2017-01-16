@@ -32,11 +32,10 @@ namespace SystemRezerwacjiWizyt.Controllers
                 foreach (var date in day.Slots)
                 {
                     DateTimeExt n= new DateTimeExt();
-                    n.Key = i;
+                    n.Key = i++;
                     n.Name = day.DayName;
                     n.date = new DateTime(date.Year,date.Month,date.Day,date.Hour,date.Minute,date.Second);
                     listadat.Add(n);
-                    i++;
                 }
                 
             }
@@ -114,8 +113,8 @@ namespace SystemRezerwacjiWizyt.Controllers
             db.Commit();
             MailService.MailServices tosend = new MailService.MailServices();
             tosend.SendVisitRegistrationNotifications(a,pat, model.DateToChoose[model.ChosenDate - 1].date);
-            @ViewBag.Message = "Wizyta została zarejestrowana";
-            return RedirectToAction("Index", "Home");
+            ViewBag.Message = "Wizyta została zarejestrowana";
+            return RedirectToAction("Index", "Home", new { message = $"Wizyta u {a.User.Name} w terminie {toAdd.Date:g} została pomyślnie zarezerwowana." });
         }
 
         public ActionResult DeleteConfirmationVisit(int VisitId)
