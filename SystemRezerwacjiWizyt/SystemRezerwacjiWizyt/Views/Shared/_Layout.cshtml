@@ -47,7 +47,13 @@
                     @if (!IsLogged)
                     {
                         <li>@Html.ActionLink("Zaloguj", "Login", "Account")</li>
-                        <li>@Html.ActionLink("Zarejestruj", "Register", "Account")</li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Zarejestruj się <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Pacjent", "RegisterPatient", "Account")</li>
+                                <li>@Html.ActionLink("Doktor", "RegisterDoctor", "Account")</li>
+                            </ul>
+                    </li>
                     }
                     else
                     {

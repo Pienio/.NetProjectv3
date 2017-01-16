@@ -1,55 +1,59 @@
 ﻿@model List<DatabaseAccess.Model.ProfileRequest>
-    @{
-        ViewBag.Title = "Requests";
-    }
+@{
+    ViewBag.Title = "Requests";
+}
 
-    <h2>Requests</h2>
+<h2>Requests</h2>
 <body>
-<td>
-    @foreach (var a in Model)
-    {
-        if (a.OldProfile == null)
-        {
-            <h6>Prośba o rejestracje</h6>
-        }
-        if (a.OldProfile != null)
-        {   <h6>Prośba o edycję</h6>
-        <tr>@a.OldProfile.User.Name.ToString()</tr>
-            <p>Specjalizacje</p>
-            foreach (var spec in a.OldProfile.Specialization)
-            {
-                <tr>@spec.ToString()</tr>
-            }
-        }
-
-        <p>Specjalizacje</p>
-        <tr>@a.NewProfile.User.Name.ToString()</tr>
-        foreach (var spec in a.NewProfile.Specialization)
-        {
-            <tr>@spec.ToString()</tr>
-        }
-        <td>
-            @Html.ActionLink("Akceptuj",                                                  // linkText
-                "AcceptRequests",                                    // actionName
-                "Account",                     // controllerName
-                new
-                {                                                     // routeValues
-                    ID = @a.Key
-
-                },
-                null)
-        </td>
-        <td>
-            @Html.ActionLink("Odmów",                                                  // linkText
-                            "DeclineRequests",                                    // actionName
-                             "Account",                     // controllerName
+    <div style="margin: 10px; width: 100%; margin-left: auto; margin-right: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Imię i nazwisko</th>
+                    <th>PESEL</th>
+                    <th>Specjalizacje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model)
+                {
+                    <tr>
+                        <td>@request.NewProfile.User.Name</td>
+                        <td>@request.NewProfile.User.PESEL</td>
+                        <td>@request.NewProfile.User.PESEL</td>
+                        <td>
+                            @foreach (var Spec in request.NewProfile.Specialization)
+                            {
+                                @Spec.Name<br />
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Akceptuj", // linkText
+                        "AcceptRequests", // actionName
+                        "Account", // controllerName
                         new
-                        {                                                     // routeValues
-                            ID = @a.Key
+                        {
+                            // routeValues
+                            ID = @request.Key
 
                         },
                         null)
-        </td>
-    }
-</td>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Odmów", // linkText
+                        "DeclineRequests", // actionName
+                        "Account", // controllerName
+                        new
+                        {
+                            // routeValues
+                            ID = @request.Key
+
+                        },
+                        null)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </body>

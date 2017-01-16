@@ -413,12 +413,6 @@ namespace SystemRezerwacjiWizyt.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Register(string returnUrl)
-        {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
-        }
-
         public ActionResult RegisterPatient(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
@@ -702,12 +696,11 @@ namespace SystemRezerwacjiWizyt.Controllers
             db.Requests.Add(now);
             //db.Doctors.Add(Doctor);
             db.Commit();
-            ViewBag.Message = "Twoja prośba o akceptacje profilu została przesłana do admina";
             //var usr = db.Doctors.Select(p => p).First(p => p.User.PESEL == Doctor.User.PESEL);
             //Session["User"] = usr;
             //MailServices tosend = new MailServices();
             //tosend.SendAcceptationMail(usr.User.Mail);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { message = "Twoja prośba o akceptację profilu została przesłana do administratora. O jej rozpatrzeniu zostaniesz powiadomiony mailowo." });
         }
 
         [HttpPost]
