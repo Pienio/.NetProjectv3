@@ -19,69 +19,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="~/Content/custom.css"/>
+    @*<script type="text/javascript" src="~/Rating/rating.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Rating/rating.css" />
+    <script type="text/javascript">
+        $(function ()
+        {
+            $('.rating').rating();
+        });
+    </script>*@
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            @Html.ActionLink("System Rezerwacji Wizyt", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                @ViewBag.MSG
-                @if (!IsLogged)
-                {
-                    <li>@Html.ActionLink("Zaloguj", "Login", "Account")</li>
-                    <li>@Html.ActionLink("Zarejestruj", "Register", "Account")</li>
-                }
-                else
-                {
-                    <li>Hello @LoggedIn.User.Name.ToString()</li>
-                    <li>@Html.ActionLink("Wyloguj", "LogOut", "Account")</li>
-                    if (LoggedIn is Doctor)
-                     {  
-                         <li>@Html.ActionLink("Edytuj konto", "EditDoctor", "Account")</li>
-
-                    }
-                    if (LoggedIn is Patient)
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("System rezerwacji wizyt", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @ViewBag.MSG
+                    @if (!IsLogged)
                     {
-                        <li>@Html.ActionLink("Edytuj konto", "EditPatient", "Account")</li>
-
+                        <li>@Html.ActionLink("Zaloguj", "Login", "Account")</li>
+                        <li>@Html.ActionLink("Zarejestruj", "Register", "Account")</li>
                     }
-                    if (LoggedIn is Admin)
+                    else
                     {
-                        <li>@Html.ActionLink("Prośby", "Requests", "Account")</li>
-                        <li>@Html.ActionLink("Specjalizacje", "Index", "Specializations")</li>
+                        <li>Hello @LoggedIn.User.Name.ToString()</li>
+                        <li>@Html.ActionLink("Wyloguj", "LogOut", "Account")</li>
+                        if (LoggedIn is Doctor)
+                        {
+                            <li>@Html.ActionLink("Edytuj konto", "EditDoctor", "Account")</li>
+
+                        }
+                        if (LoggedIn is Patient)
+                        {
+                            <li>@Html.ActionLink("Edytuj konto", "EditPatient", "Account")</li>
+
+                        }
+                        if (LoggedIn is Admin)
+                        {
+                            <li>@Html.ActionLink("Prośby", "Requests", "Account")</li>
+                            <li>@Html.ActionLink("Specjalizacje", "Index", "Specializations")</li>
+
+                        }
+
+                        if (LoggedIn is Doctor || LoggedIn is Patient)
+                        {
+
+                            <li>@Html.ActionLink("Twoje Wizyty", "ShowVisits", "Visit")</li>
+                        }
 
                     }
+                    <li>@Html.ActionLink("Wyślij e-mail do admina", "SendMailToAdmin", "Home")</li>
 
-                    if (LoggedIn is Doctor || LoggedIn is Patient)
-                    {
-
-                        <li>@Html.ActionLink("Twoje Wizyty", "ShowVisits", "Visit")</li>
-                    }
-
-                }
-                <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                <li>@Html.ActionLink("Wyślij e-mail do admina", "SendMailToAdmin", "Home")</li>
-
-            </ul>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
-<div class="container body-content">
-    @RenderBody()
-    <hr/>
-</div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+    </div>
 
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
-@RenderSection("scripts", required: false)
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
 </body>
 </html>

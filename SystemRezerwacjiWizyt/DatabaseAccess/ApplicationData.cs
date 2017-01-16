@@ -18,6 +18,7 @@ namespace DatabaseAccess.Model
         public DbSet<Specialization> Specializations { get; set; }
         public DbSet<Visit> Visits { get; set; }
         public DbSet<ProfileRequest> Requests { get; set; }
+        public DbSet<Opinion> Opinions { get; set; }
 
         public DbSet<Admin> Admins { get; set; }
 

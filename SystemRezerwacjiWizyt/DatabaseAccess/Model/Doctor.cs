@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseAccess.Model
 {
-    
     [DataContract(IsReference = true)]
     public class Doctor : Person
     {
         [Required]
         [DataMember]
         public virtual IList<Specialization> Specialization { get; set; } = new List<Specialization>();
+        //[DataMember]
+        //public virtual IList<Opinion> Opinions { get; set; } = new List<Opinion>();
         [DataMember]
-        public bool ProfileAccepted { get; set; } = false;
+        public bool ProfileAccepted { get; set; }
 
         //poniższe właściwości muszą mieć w nazwie dzień tygodnia po angielsku, inaczej funkcja GetWorkingTime nie będzie działać
         [DataMember]
@@ -31,26 +30,21 @@ namespace DatabaseAccess.Model
         [DataMember]
         public WorkingTime FridayWorkingTime { get; set; }
 
-        public WorkingTime[] WeeklyWorkingTime
+        public WorkingTime[] WeeklyWorkingTime => new[]
         {
-            get
-            {
-                return new WorkingTime[]
-                {
-                    MondayWorkingTime, TuesdayWorkingTime, WednesdayWorkingTime, ThursdayWorkingTime, FridayWorkingTime
-                };
-            }
-        }
+            MondayWorkingTime, TuesdayWorkingTime, WednesdayWorkingTime, ThursdayWorkingTime, FridayWorkingTime
+        };
 
-       
+        public double? AverageRate => Opinions.Count == 0 ? null : (double?)Opinions.Average(opinion => opinion.Rate);
+
         public void CopyFrom(Doctor doctor)
         {
-           // Key = doctor.Key;
-           // User.Key = doctor.User.Key;
+            // Key = doctor.Key;
+            // User.Key = doctor.User.Key;
             if (User == null)
             {
                 User = new User();
-                User.Name=new PersonName();
+                User.Name = new PersonName();
                 MondayWorkingTime = new WorkingTime();
                 TuesdayWorkingTime = new WorkingTime();
                 WednesdayWorkingTime = new WorkingTime();
@@ -63,11 +57,11 @@ namespace DatabaseAccess.Model
             User.Password = doctor.User.Password;
             User.PESEL = doctor.User.PESEL;
             Specialization = new List<Specialization>();
-            foreach (var VARIABLE in doctor.Specialization)
+            foreach (var spec in doctor.Specialization)
             {
-                Specialization.Add(VARIABLE);
+                Specialization.Add(spec);
             }
-            
+
             MondayWorkingTime = doctor.MondayWorkingTime;
             TuesdayWorkingTime = doctor.TuesdayWorkingTime;
             WednesdayWorkingTime = doctor.WednesdayWorkingTime;
@@ -85,14 +79,13 @@ namespace DatabaseAccess.Model
             {
                 if (!ProfileAccepted)
                     return DateTime.Now;
-                IApplicationData db = new ApplicationDataFactory().CreateApplicationData();
-               
-                DateTime current = NextSlot(DateTime.Now.AddMinutes(60));
+
+                var current = NextSlot(DateTime.Now.AddMinutes(60));
                 //zmiana
                 var visits = (from v in Visits
                               where v.Date >= current
                               select v.Date).ToList();
-                visits.Sort((v1, v2) => DateTime.Compare(v1, v2));
+                visits.Sort(DateTime.Compare);
 
                 if (visits.Count == 0 || current < visits[0])
                 {
@@ -106,22 +99,21 @@ namespace DatabaseAccess.Model
                 }
                 return NextSlot(visits[visits.Count - 1].AddMinutes(30));
             }
-           
-        } 
 
-         ///<summary>
+        }
+
+        ///<summary>
         /// Zwraca następny potencjalnie możliwy termin wizyty(z uwzględnieniem weekendów i godzin pracy)
-       ///  </summary>
-       ///  <param name = "date" > Data wyjściowa</param>
+        ///  </summary>
+        ///  <param name = "date" > Data wyjściowa</param>
         /// <returns></returns>
         private DateTime NextSlot(DateTime date)
         {
             date = date.AddMinutes(30);
             date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute > 30 || date.Minute == 0 ? 30 : 0, 0);
-            WorkingTime time;
             do
             {
-                time = GetWorkingTime(date);
+                var time = GetWorkingTime(date);
                 if (time == null || date.Hour >= time.End)
                 {
                     date = date.AddDays(1);
@@ -141,15 +133,15 @@ namespace DatabaseAccess.Model
         // Zwraca odpowiedni<see cref= "WorkingTime" /> dla danego dnia tygodnia lub null w przypadku weekendu
         /// </summary>
         // <param name = "date" ></ param >
-        /// < returns ></ returns >
+        /// <returns></returns>
         private WorkingTime GetWorkingTime(DateTime date)
         {
-            DayOfWeek day = date.DayOfWeek;
+            var day = date.DayOfWeek;
             return (from p in typeof(Doctor).GetProperties()
                     where p.Name.Contains(day.ToString()) && p.PropertyType == typeof(WorkingTime)
                     select p.GetValue(this) as WorkingTime).FirstOrDefault();
         }
 
-        public override string ToString() => string.Format("{0} ({1})", User.Name, Specialization);
+        public override string ToString() => $"{User?.Name} ({Specialization})";
     }
 }

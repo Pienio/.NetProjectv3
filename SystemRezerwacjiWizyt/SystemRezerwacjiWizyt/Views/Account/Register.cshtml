@@ -3,9 +3,12 @@
     ViewBag.Title = "Register";
 }
 
-<h2>Rejestracja</h2>
 <body>
-<h6>Rejestracja jako:</h6>
-    @Html.ActionLink("Pacjent", "RegisterPatient", "Account")
-    @Html.ActionLink("Doctor", "RegisterDoctor", "Account")
+<div class="form-group">
+    <h3>Rejestracja jako:</h3>
+    <ul>
+        <li>@Html.ActionLink("Pacjent", "RegisterPatient", "Account")</li>
+        <li>@Html.ActionLink("Doktor", "RegisterDoctor", "Account")</li>
+    </ul>
+</div>
 </body>

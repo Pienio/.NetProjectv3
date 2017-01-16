@@ -31,6 +31,6 @@ namespace SystemRezerwacjiWizyt.Models
         public string Name { get; set; }
         public DateTime date { get; set; }
 
-        public string See { get { return Name + " " + date.ToString(); } }
+        public string See => Name + " " + date;
     }
 }

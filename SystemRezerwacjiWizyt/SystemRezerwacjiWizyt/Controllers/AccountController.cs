@@ -19,7 +19,7 @@ using MailService;
 
 namespace SystemRezerwacjiWizyt.Controllers
 {
-  //  [Authorize]
+    //  [Authorize]
     public class AccountController : Controller
     {
         private ITransactionalApplicationData db = new ApplicationDataFactory().CreateTransactionalApplicationData(false);
@@ -548,9 +548,9 @@ namespace SystemRezerwacjiWizyt.Controllers
         public async Task<ActionResult> RegisterDoctor(RegisterDoctorViewModel model, string returnUrl)
         {
             model.SpecToChoose = db.Specializations.Select(p => p).ToList();
-         
+
             ViewBag.ReturnUrl = returnUrl;
-           
+
             List<Specialization> nowaa = new List<Specialization>();
             foreach (var specialization in model.doc.Specialization)
             {
@@ -680,7 +680,7 @@ namespace SystemRezerwacjiWizyt.Controllers
 
         public ActionResult PasswordReset()
         {
-            PasswordResetViewModel a= new PasswordResetViewModel();
+            PasswordResetViewModel a = new PasswordResetViewModel();
             a.maill = "";
             return View(a);
         }
@@ -699,23 +699,20 @@ namespace SystemRezerwacjiWizyt.Controllers
             if (a.Count() != 0)
                 b = a.First();
 
-            
+
             if (b != null)
             {
                 string newPasssword = Utils.Token.GetToken();
                 b.Password = Utils.PasswordHasher.CreateHash(newPasssword);
                 MailServices tosend = new MailServices();
-                tosend.SendPasswordResetMail(b.Mail,newPasssword);
+                tosend.SendPasswordResetMail(b.Mail, newPasssword);
                 return RedirectToAction("Index", "Home");
 
             }
-            else
-            {
-                ViewBag.Message = "NIe istnieje użytkownik o takim mailu";
-                return View();
-            }
+            ViewBag.Message = "NIe istnieje użytkownik o takim mailu";
+            return View();
 
-            
+
         }
     }
 }

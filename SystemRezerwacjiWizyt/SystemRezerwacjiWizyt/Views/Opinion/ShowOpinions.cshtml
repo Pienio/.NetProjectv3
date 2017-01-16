@@ -1,0 +1,23 @@
+﻿@model DatabaseAccess.Model.Doctor
+
+<h3>Opinie na temat lekarza: @Model.User.Name</h3>
+
+<div class="form-horizontal">
+    @if (Model.Opinions.Any())
+    {
+        foreach (var op in Model.Opinions)
+        {
+            <div class="form-group">
+                <h4>@op.AuthorNick</h4>
+                <p>@op.Description</p>
+                <p>Ocena: @op.Rate / 5</p>
+            </div>
+        }
+    }
+    else
+    {
+        <div>
+            <p>Brak opinii.</p>
+        </div>
+    }
+</div>

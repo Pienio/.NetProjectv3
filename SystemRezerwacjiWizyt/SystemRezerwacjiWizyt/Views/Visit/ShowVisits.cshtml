@@ -1,52 +1,49 @@
 ﻿@using DatabaseAccess.Model
-@model List<DatabaseAccess.Model.Visit>
+@model List<Visit>
 @{
-    ViewBag.Title = "ShowVisits";
+    ViewBag.Title = "Twoje wizyty";
 }
 
-<h2>ShowVisits</h2>
+<h2>@ViewBag.Title</h2>
 
-<body>
-<tr>
-    @foreach (var a in Model)
-    {
-        if (Session["User"] is Patient)
-        {
-            <td>@a.Doctor.User.Name.ToString()</td>
-            <td>@a.Spec.ToString()</td>
-            <td>@a.Date.ToString()</td>
-            <td>
-                @Html.ActionLink("Odwołaj",                                                  // linkText
-                            "DeleteConfirmationVisit",                                    // actionName
-                             "Visit",                     // controllerName
-                        new
-                        {                                                     // routeValues
-                            VisitId = @a.Key
+<table>
+    <thead>
+        <tr>
+            <th>Imię i nazwisko</th>
+            <th>Specjalizacja</th>
+            <th>Data</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+            {
+            <tr>
+                @if (Session["User"] is Patient)
+                {
+                    <td>@a.Doctor.User.Name.ToString()</td>
+                        <td>@a.Spec.ToString()</td>
+                        <td>@a.Date.ToString()</td>
+                    if (@a.Date >= DateTime.Now.AddHours(1))
+                    {
+                        <td>@Html.ActionLink("Odwołaj", "DeleteConfirmationVisit", "Visit", new { VisitId = @a.Key }, null)</td>
+                    }
+                    if (@a.Date < DateTime.Now)
+                    {
+                        <td>@Html.ActionLink("Oceń", "AddOpinion", "Account", new { id = @a.Doctor.Key }, null)</td>
+                    }
+                }
+                else if (Session["User"] is Doctor)
+                {
+                    <td>@a.Patient.User.Name.ToString()</td>
+                        <td>@a.Spec.ToString()</td>
+                        <td>@a.Date.ToString()</td>
+                    if (@a.Date < DateTime.Now.AddHours(1))
+                    {
+                        <td>@Html.ActionLink("Odwołaj", "DeleteConfirmationVisit", "Visit", new { VisitId = @a.Key }, null)</td>
+                    }
+                }
 
-                        },
-                        null)
-        </td>
+            </tr>
         }
-        else if (Session["User"] is Doctor)
-        {
-            <td>@a.Patient.User.Name.ToString()</td>
-            <td>@a.Spec.ToString()</td>
-            <td>@a.Date.ToString()</td>
-            <td>
-                @Html.ActionLink("Odwołaj",                                                  // linkText
-                            "DeleteConfirmationVisit",                                    // actionName
-                             "Visit",                     // controllerName
-                        new
-                        {                                                     // routeValues
-                            VisitId = @a.Key
-
-                        },
-                        null)
-            </td>
-        }
-
-    }
-</tr>
-
-
-</body>
+    </tbody>
+</table>

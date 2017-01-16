@@ -16,9 +16,12 @@ namespace SystemRezerwacjiWizyt.Controllers
     {
         private ITransactionalApplicationData db = new ApplicationDataFactory().CreateTransactionalApplicationData(false);
 
-        public ActionResult Index()
+        public ActionResult Index(string message, string error)
         {
             db.Fill();
+            ViewBag.Message = message;
+            ViewBag.Error = error;
+
             var a = db.Doctors.Select(p => p).Where(p => p.ProfileAccepted && p.User.Active).ToList();
             IndexHomeViewModels b= new IndexHomeViewModels();
             b.docs = a;

@@ -20,5 +20,8 @@ namespace DatabaseAccess.Model
         public virtual User User { get; set; }
         [DataMember]
         public virtual IList<Visit> Visits { get; set; } = new List<Visit>();
+        [DataMember]
+        [Required]
+        public virtual IList<Opinion> Opinions { get; set; } = new List<Opinion>();
     }
 }
