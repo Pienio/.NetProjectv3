@@ -201,11 +201,12 @@ namespace SystemRezerwacjiWizyt.Controllers
                 {
                     db.BeginTransaction();
                     var doc = db.Doctors.Find(a.NewProfile.Key);
+                    string mail = doc.User.Mail;
                     db.Doctors.Remove(doc);
                     db.Requests.Remove(a);
                     db.Commit();
 
-                    tosend.SendRejectionMail(doc.User.Mail, model.Reason);
+                    tosend.SendRejectionMail(mail, model.Reason);
                     lista = db.Requests.Select(p => p).ToList();
                     return View("Requests", lista);
 
