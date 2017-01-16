@@ -58,11 +58,6 @@ namespace UnitTestProject1
            
             Random r = new Random();
             int d = r.Next(1, 10);
-           
-
-           
-        
-            
 
             if (d <= 7)
             {
@@ -81,8 +76,6 @@ namespace UnitTestProject1
         public void GetDoctorsList()
         {
 
-
-         
 
             var doc = db.Doctors.Select(p=>p);
 
@@ -169,6 +162,24 @@ namespace UnitTestProject1
 
         }
         [TestMethod]
+        public void GetOpinionList()
+        {
+
+
+            var a = new SystemRezerwacjiWizyt.Controllers.OpinionController();
+            Doctor s = new Doctor();
+            Random r = new Random();
+            int d = r.Next(1, 8);
+            var g = a.ShowOpinions(d);
+            ViewResult viewResult = (ViewResult)g;
+            s = (Doctor)viewResult.Model;
+
+
+            if (s.Opinions.Count != 0)
+                Assert.Fail();
+
+        }
+        [TestMethod]
         public void CheckAddandDeleteDoctor()
         {
 
@@ -179,8 +190,20 @@ namespace UnitTestProject1
             var spec = cer[0];
             doc.Specialization = new List<Specialization>();
             doc.Specialization.Add(spec);
+            db.BeginTransaction();
             db.Doctors.Add(doc);
-            var a = db.Doctors.Find()
+            db.Commit();
+            var a = db.Doctors.Select(p=>p).Where(p=>p.User.PESEL==doc.User.PESEL);
+            if(a==null||a.Count()==0)
+                Assert.Fail();
+
+           
+            db.BeginTransaction();
+            db.Doctors.Remove(a.First());
+            db.Commit();
+            a = db.Doctors.Select(p => p).Where(p => p.User.PESEL == doc.User.PESEL);
+            if(a.Count()!=0)
+                Assert.Fail();
             //SystemRezerwacjiWizyt.Models.RegisterDoctorViewModel newdoc = new RegisterDoctorViewModel();
             //newdoc.doc = doc;
             //newdoc.SpecId = 1;
@@ -209,66 +232,63 @@ namespace UnitTestProject1
 
 
         }
-        //[TestMethod]
-        //public void CheckAddandDeletePatient()
-        //{
+        [TestMethod]
+        public void CheckAddandDeletePatient()
+        {
 
 
-        //    var a = TestingExtension.GetService();
+            
 
-        //    var doc = TestingExtension.GetPatient();
+            var doc = TestingExtension.GetPatient();
+            db.BeginTransaction();
+            db.Patients.Add(doc);
 
-        //    a.AddPatient(doc);
-        //    var c = a.GetUser(doc.User.PESEL, doc.User.Password);
-        //    var d = a.GetPatientByUserId((int)c.Key);
-        //    if (d == null)
-        //        Assert.Fail();
-
-        //    var dd = a.DeletePatient(d);
-        //    Assert.IsTrue(dd);
+            var c = db.Patients.Select(p=>p).Where(p=>p.User.PESEL==doc.User.PESEL);
+            if (c == null || c.Count() == 0)
+                Assert.Fail();
 
 
+            db.BeginTransaction();
+            db.Patients.Remove(c.First());
+            db.Commit();
+            c = db.Patients.Select(p => p).Where(p => p.User.PESEL == doc.User.PESEL);
+            if (c.Count() != 0)
+                Assert.Fail();
 
 
-        //}
-
-        //[TestMethod]
-        //public void CheckAddandDeleteVisit()
-        //{
 
 
-        //    var a = TestingExtension.GetService();
+        }
 
-        //    var pac = TestingExtension.GetPatient();
-        //    var doc = TestingExtension.GetDoctor();
-
-        //    a.AddPatient(pac);
-        //    a.AddDoctor(doc);
-        //    var c = a.GetUser(pac.User.PESEL, pac.User.Password);
-        //    var pac1 = a.GetPatientByUserId((int)c.Key);
-        //    var doc1 = a.SearchDoctorsList(null, "Janowski");
-        //    if (doc1.Length == 0)
-        //        Assert.Fail();
-        //    var doc2 = doc1.First();
-        //    var date = a.GetFirstFreeSlot((int)doc2.Key);
-
-        //    bool dd = a.RegisterVisit(date, (int)pac1.Key, (int)doc2.Key);
-        //    Assert.IsTrue(dd);
-        //    var pacviz = a.GetPatientVisits((int)pac1.Key, false);
-        //    var docviz = a.GetDoctorVisits((int)doc2.Key, false);
-        //    if (pacviz.Length == 0 || docviz.Length == 0)
-        //        Assert.Fail();
-
-        //    dd = a.DeleteVisit(pacviz.First());
-        //    Assert.IsTrue(dd);
-
-        //    dd = a.DeletePatient(pac1);
-        //    Assert.IsTrue(dd);
-        //    dd = a.DeleteDoctor(doc2);
-        //    Assert.IsTrue(dd);
+        [TestMethod]
+        public void CheckAddandDeleteVisit()
+        {
 
 
-        //}
+         
+
+            var pac = TestingExtension.GetPatient();
+            var doc = TestingExtension.GetDoctor();
+            doc.Specialization= new List<Specialization>();
+            doc.Specialization.Add(db.Specializations.Find(1));
+            db.BeginTransaction();
+            db.Patients.Add(pac);
+            db.Doctors.Add(doc);
+            db.Commit();
+            var c = db.Doctors.Select(p => p).Where(p => p.User.PESEL == doc.User.PESEL).First();
+            var d = db.Patients.Select(p => p).Where(p => p.User.PESEL == pac.User.PESEL).First();
+            Visit dd = new Visit();
+            dd.Patient = d;
+            dd.Doctor = c;
+            dd.Spec = c.Specialization.First();
+            dd.Date = DateTime.Now;
+            dd.
+
+
+
+
+
+        }
 
 
     }

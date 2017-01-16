@@ -201,11 +201,12 @@ namespace SystemRezerwacjiWizyt.Controllers
                 {
                     db.BeginTransaction();
                     var doc = db.Doctors.Find(a.NewProfile.Key);
+                    string mail = doc.User.Mail;
                     db.Doctors.Remove(doc);
                     db.Requests.Remove(a);
                     db.Commit();
 
-                    tosend.SendRejectionMail(doc.User.Mail, model.Reason);
+                    tosend.SendRejectionMail(mail, model.Reason);
                     lista = db.Requests.Select(p => p).ToList();
                     return View("Requests", lista);
 
@@ -310,6 +311,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             }
             if (model.SpecId != null && model.SpecId != 0)
             {
+                ModelState.Clear();
                 Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
 
                 var abc = model.doc.Specialization.Select(p => p).Where(p => p.Name == toad.Name);
@@ -339,6 +341,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             }
             if (model.SelectedSpec != null)
             {
+                ModelState.Clear();
                 if (model.SelectedSpec.Count() != model.doc.Specialization.Count)
                 {
 
@@ -346,7 +349,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                     foreach (var VARIABLE in model.SelectedSpec)
                     {
                         int key = Int32.Parse(VARIABLE);
-                        var todel = model.doc.Specialization[key];
+                        var todel = model.SpecToChoose[key-1];
                         var todel1 = nowaa.Select(p => p).Where(p => p.Name == todel.Name).First();
                         nowaa.Remove(todel1);
                     }
@@ -711,13 +714,10 @@ namespace SystemRezerwacjiWizyt.Controllers
                 var sdf = db.Specializations.Select(p => p).First(p => p.Name == specialization.Name);
                 nowaa.Add(sdf);
             }
-            //if (db.Users.Any(u => u.Active && u.Mail == model.Mail))
-            //{
-            //    ViewBag.Mess = "Podany adres e-mail został już użyty do rejestracji";
-            //    return View(model);
-            //}
+        
             if (model.SpecId != null && model.SpecId != 0)
             {
+                ModelState.Clear();
                 Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
 
                 var abc = model.doc.Specialization.Select(p => p).Where(p => p.Name == toad.Name);
@@ -747,6 +747,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             }
             if (model.SelectedSpec != null)
             {
+                ModelState.Clear();
                 if (model.SelectedSpec.Count() != model.doc.Specialization.Count)
                 {
 
@@ -754,16 +755,16 @@ namespace SystemRezerwacjiWizyt.Controllers
                     foreach (var VARIABLE in model.SelectedSpec)
                     {
                         int key = Int32.Parse(VARIABLE);
-                        var todel = model.doc.Specialization[key];//db.Specializations.Find(key);
+                        var todel = model.SpecToChoose[key-1];//db.Specializations.Find(key);
                         var todel1 = nowaa.Select(p => p).Where(p => p.Name == todel.Name).First();
                         nowaa.Remove(todel1);
                     }
                 }
 
 
+               
 
-
-
+                //model.doc.Specialization.Clear();
                 model.doc.Specialization = nowaa;
 
 
@@ -796,7 +797,13 @@ namespace SystemRezerwacjiWizyt.Controllers
             d.User.Mail = model.Mail;
             d.User.PESEL = model.PESEL;
             d.User.Password = SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.Password);
-            d.Specialization = model.doc.Specialization;
+            d.Specialization= new List<Specialization>();
+            foreach (var spc in model.doc.Specialization)
+            {
+                var dpc = db.Specializations.Select(p => p).Where(p => spc.Name == p.Name).First();
+                d.Specialization.Add(dpc);
+            }
+           // d.Specialization = model.doc.Specialization;
             d.FridayWorkingTime = model.doc.FridayWorkingTime;
             d.MondayWorkingTime = model.doc.MondayWorkingTime;
             d.ThursdayWorkingTime = model.doc.ThursdayWorkingTime;
