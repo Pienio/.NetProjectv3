@@ -56,7 +56,11 @@ namespace SystemRezerwacjiWizyt.Controllers
 
                 if (c.Kind == DocOrPat.Doctor)
                 {
-                    Session["User"] = db.Doctors.First(p => p.User.Key == c.Key);
+                    var docc = db.Doctors.First(p => p.User.Key == c.Key);
+                    if (docc.ProfileAccepted)
+                        Session["User"] = db.Doctors.First(p => p.User.Key == c.Key);
+                    else
+                        ViewBag.MSG = "Twoje konto nie zostało jeszcze zaakceptowane przez administratora";
                 }
                 else if (c.Kind == DocOrPat.Patient)
                 {

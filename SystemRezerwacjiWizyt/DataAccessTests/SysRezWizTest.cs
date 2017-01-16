@@ -106,7 +106,7 @@ namespace UnitTestProject1
             IndexHomeViewModels nw = new IndexHomeViewModels();
             
             nw.Text = names[d] + " " + surnames[d];
-            nw.SelSPec = d;
+            nw.SelSPec = d+1;
             var g = c.Search(nw);
             ViewResult viewResult = (ViewResult)g;
             nw =(IndexHomeViewModels)viewResult.Model;
@@ -117,6 +117,7 @@ namespace UnitTestProject1
             }
 
             nw.Text = names[d] + " " + surnames[d];
+            nw.SelSPec = null;
             g = c.Search(nw);
             viewResult = (ViewResult)g;
             nw = (IndexHomeViewModels)viewResult.Model;
@@ -125,7 +126,7 @@ namespace UnitTestProject1
                 Assert.Fail();
             }
             nw.Text =surnames[d];
-            nw.SelSPec = d;
+            nw.SelSPec = d+1;
             g = c.Search(nw);
             viewResult = (ViewResult)g;
             nw = (IndexHomeViewModels)viewResult.Model;
@@ -134,7 +135,7 @@ namespace UnitTestProject1
                 Assert.Fail();
             }
             nw.Text = names[d];
-            nw.SelSPec = d;
+            nw.SelSPec = d+1;
             g = c.Search(nw);
             viewResult = (ViewResult)g;
             nw = (IndexHomeViewModels)viewResult.Model;
@@ -200,10 +201,12 @@ namespace UnitTestProject1
 
            
             db.BeginTransaction();
-            db.Doctors.Remove(a.First());
+            var doccc = a.First();
+            db.Users.Remove(doccc.User);
+            db.Doctors.Remove(doccc);
             db.Commit();
-            a = db.Doctors.Select(p => p).Where(p => p.User.PESEL == doc.User.PESEL);
-            if(a.Count()!=0)
+            var aa = db.Doctors.Select(p => p).Where(p => p.User.PESEL == doc.User.PESEL).ToList();
+            if(aa.Count()!=0)
                 Assert.Fail();
             //SystemRezerwacjiWizyt.Models.RegisterDoctorViewModel newdoc = new RegisterDoctorViewModel();
             //newdoc.doc = doc;
