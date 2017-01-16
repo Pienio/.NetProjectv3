@@ -718,6 +718,11 @@ namespace SystemRezerwacjiWizyt.Controllers
                 var sdf = db.Specializations.Select(p => p).First(p => p.Name == specialization.Name);
                 nowaa.Add(sdf);
             }
+            //if (db.Users.Any(u => u.Active && u.Mail == model.Mail))
+            //{
+            //    ViewBag.Mess = "Podany adres e-mail został już użyty do rejestracji";
+            //    return View(model);
+            //}
             if (model.SpecId != null && model.SpecId != 0)
             {
                 Specialization toad = db.Specializations.Select(p => p).Where(p => p.Key == model.SpecId).First();
