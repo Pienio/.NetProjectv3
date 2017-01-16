@@ -12,11 +12,11 @@
     <script>
         $(document).ready(function () {
             //$('#okkkk').click(function () {
-                //$(document).getElementById("SpecToAdd").selectedIndex = 0;
-                // $("*").hide();
+            //$(document).getElementById("SpecToAdd").selectedIndex = 0;
+            // $("*").hide();
             document.getElementById("SpecToAdd").selectedIndex = 0;
             document.getElementById("SpecToDel").selectedIndex = -1;
-           // });
+            // });
         });
 
         function ClearToAdd() {
@@ -32,69 +32,69 @@
             document.getElementById("SpecToDel").selectedIndex = -1;
         }
     </script>
-    @*<script type="text/javascript"> 
-     
-    </script>*@
+    @*<script type="text/javascript">
 
-        @*function changeText2() {
+        </script>*@
 
-            //   var firstname = document.getElementById('firstname').value;
-            var e = document.getElementById("Spec");
-            var strUser =  e.options[e.selectedIndex].text;
-            //  document.getElementById('boldStuff2').innerHTML = strUser;
-            var node = document.createElement("LI");
-            var list = document.getElementById("Specs");
+    @*function changeText2() {
 
-            if (strUser !== "Choose...") {
+                //   var firstname = document.getElementById('firstname').value;
+                var e = document.getElementById("Spec");
+                var strUser =  e.options[e.selectedIndex].text;
+                //  document.getElementById('boldStuff2').innerHTML = strUser;
+                var node = document.createElement("LI");
+                var list = document.getElementById("Specs");
+
+                if (strUser !== "Choose...") {
 
 
-                var flag = false;
-                var items = list.getElementsByTagName("LI");
+                    var flag = false;
+                    var items = list.getElementsByTagName("LI");
 
-                for (var i = 0; i < items.length; i++) {
+                    for (var i = 0; i < items.length; i++) {
 
-                    var open = items[i].innerHTML;
+                        var open = items[i].innerHTML;
 
-                    if (items[i].innerHTML.toString() === strUser.toString()) {
-                        flag = true;
+                        if (items[i].innerHTML.toString() === strUser.toString()) {
+                            flag = true;
 
+                        }
+
+                    }
+                    if (!flag) {
+                        var textnode = document.createTextNode(strUser);
+
+
+
+                        node.appendChild(textnode);
+                        list.appendChild(node);
                     }
 
                 }
-                if (!flag) {
-                    var textnode = document.createTextNode(strUser);
-                    
-                  
-                   
-                    node.appendChild(textnode);
-                    list.appendChild(node);
-                }
-              
+
             }
 
-        }
+            function postSortOrder() {
+                $.ajax({
+                    data: {
+                        selectedSpecs: $('#Specs li').get(),
 
-        function postSortOrder() {
-            $.ajax({
-                data: {
-                    selectedSpecs: $('#Specs li').get(),
-             
-                },
-                type: 'POST'
-            });
-        }
-    </script>*@
+                    },
+                    type: 'POST'
+                });
+            }
+        </script>*@
 
 </head>
 
 @*First name: <input type="text" id="firstname"><br>
-<p>Your first name is: <b id='boldStuff2'></b> </p>
-<p> Other people's names: </p>
+    <p>Your first name is: <b id='boldStuff2'></b> </p>
+    <p> Other people's names: </p>
 
-<ol id="demo"></ol>
+    <ol id="demo"></ol>
 
 
-<input type='button' onclick='changeText2()' value='Submit' />*@
+    <input type='button' onclick='changeText2()' value='Submit' />*@
 <body>
 
 
@@ -102,7 +102,7 @@
 
     @*<p id="demo">A Paragraph.</p>
 
-    <button id="okkkk">Try it</button>*@
+        <button id="okkkk">Try it</button>*@
 
     @using (Html.BeginForm())
     {
@@ -136,10 +136,32 @@
                 @Html.HiddenFor(model => model.doc.User.Password, new { htmlAttributes = new { @class = "form-control" } })
 
             </div>
-            <div class="editor-label">
-                @Html.LabelFor(model => model.SpecId, "Customer Name")
+            <div class="form-group">
+                <label class="control-label col-md-2">Specjalizacje</label>
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.SpecId, new SelectList(Speclist, "Key", "Name", "0"), "Wybierz... ", new { id = "SpecToAdd", @class = "form-control" })
+                    <input type="submit" value="Dodaj" onclick="ClearToDel()" class="btn btn-default" />
+                </div>
             </div>
-            <div>
+            <div class="form-group">
+                <label class="control-label col-md-2"></label>
+                <div class="col-md-10">
+                    @Html.ListBoxFor(model => model.SelectedSpec, new SelectList(DocSpecList, "Key", "Name"), new { size = @DocSpecList.Count, id = "SpecToDel", @class = "form-control" })
+                    <input type="submit" value="Usuń" onclick="ClearToAdd()" class="btn btn-default" />
+                </div>
+                <!--ul id="Specs">
+                @for (int i = 0; i < Model.doc.Specialization.Count(); i++)
+                {
+                    <li>@Html.DisplayTextFor(m => m.doc.Specialization[i].Name)</li>
+                        @*<li><input type="submit" value="Delete" class="btn btn-default"/></li>*@
+                    @Html.HiddenFor(m => m.doc.Specialization[i].Name)
+                    //{
+                    //    Html.RenderPartial("~/Views/Account/_Specializations.cshtml", Model.doc.Specialization[i]);
+                    //}
+                }
+                </ul-->
+            </div>
+            <!--div>
 
 
                 @Html.DropDownListFor(model => model.SpecId, new SelectList(Speclist, "Key", "Name", "0"), "Choose... ", new { id = "SpecToAdd" });
@@ -156,7 +178,7 @@
                     }*@
 
                 <input type="submit" value="Dodaj" onclick="ClearToDel()" class="btn btn-default" />
-            </div>
+            </!--div>
             <div id="editorRows">
                 @*@foreach (var a in Model.doc.Specialization)
                      {
@@ -186,7 +208,7 @@
 
                 </ul>
 
-            </div>
+            </div-->
             <div class="form-group">
                 @Html.LabelFor(model => model.doc.User.Mail, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -197,80 +219,71 @@
 
 
             <div class="form-group">
-                @Html.LabelFor(model => model.doc.MondayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.MondayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.MondayWorkingTime.Start, "", new { @class = "text-danger" })
+                <label class="control-label col-md-2">Godziny pracy</label>
+                <hr />
+                <div class="form-group">
+                    <label class="control-label col-md-3">Poniedziałek</label>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.doc.MondayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.MondayWorkingTime.Start, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.doc.MondayWorkingTime.End, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.MondayWorkingTime.End, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.MondayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.MondayWorkingTime.End, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <label class="control-label col-md-3">Wtorek</label>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.doc.TuesdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.TuesdayWorkingTime.Start, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.doc.TuesdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.TuesdayWorkingTime.End, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.doc.TuesdayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.TuesdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.TuesdayWorkingTime.Start, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <label class="control-label col-md-3">Środa</label>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.doc.WednesdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.WednesdayWorkingTime.Start, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.doc.WednesdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.WednesdayWorkingTime.End, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.TuesdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.TuesdayWorkingTime.End, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <label class="control-label col-md-3">Czwartek</label>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.doc.ThursdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.ThursdayWorkingTime.Start, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.doc.ThursdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.ThursdayWorkingTime.End, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.doc.WednesdayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.WednesdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.WednesdayWorkingTime.Start, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    <label class="control-label col-md-3">Piątek</label>
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.doc.FridayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.FridayWorkingTime.Start, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.doc.FridayWorkingTime.End, new { htmlAttributes = new { @class = "form-control", style = "width: 100px" } })
+                        @Html.ValidationMessageFor(model => model.doc.FridayWorkingTime.End, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.WednesdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.WednesdayWorkingTime.End, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.password, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-9">
+                        @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.doc.ThursdayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.ThursdayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.ThursdayWorkingTime.Start, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.ThursdayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.ThursdayWorkingTime.End, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.doc.FridayWorkingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.FridayWorkingTime.Start, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.FridayWorkingTime.Start, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.doc.FridayWorkingTime.End, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.doc.FridayWorkingTime.End, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.password, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            @Html.HiddenFor(model => model.doc.User.PESEL)
-            @Html.HiddenFor(model => model.doc.User.Password)
-            
-            @Html.HiddenFor(Model => Model.doc.User.Active)
-            @Html.HiddenFor(Model => Model.doc.User.Kind)
-           
-            @Html.ActionLink("Zmień hasło", "ChangePassword", "Account")
-            @Html.ActionLink("Usuń konto","DeleteAccount","Account")
-          
-           
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" onclick="ClearToDel()" class="btn btn-default" />
+                @Html.HiddenFor(model => model.doc.User.PESEL)
+                @Html.HiddenFor(model => model.doc.User.Password)
+
+                @Html.HiddenFor(Model => Model.doc.User.Active)
+                @Html.HiddenFor(Model => Model.doc.User.Kind)
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" onclick="ClearToDel()" class="btn btn-default" />
+                        @Html.ActionLink("Usuń konto", "DeleteAccount", "Account", new { style = "margin-left: 10px" })
+                    </div>
                 </div>
             </div>
         </div>

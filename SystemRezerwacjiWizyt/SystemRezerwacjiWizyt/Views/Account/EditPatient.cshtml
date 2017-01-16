@@ -1,15 +1,12 @@
 ﻿@model SystemRezerwacjiWizyt.Models.EditUserVievModel
-
 @{
     ViewBag.Title = "EditPatient";
 }
-
 <h2>EditPatient</h2>
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>EditUserVievModel</h4>
         <hr />
@@ -35,28 +32,31 @@
                 @Html.ValidationMessageFor(model => model.usr.Mail, "", new { @class = "text-danger" })
             </div>
         </div>
-        @Html.HiddenFor(model=>model.usr.PESEL)
+        @Html.HiddenFor(model => model.usr.PESEL)
         @Html.HiddenFor(model => model.usr.Password)
-        <div style="visibility: hidden" >
+        <div style="visibility: hidden">
             @Html.HiddenFor(Model => Model.usr.Active)
-          
-            @Html.HiddenFor(Model => Model.usr.Kind)
-           
-        </div>
 
+            @Html.HiddenFor(Model => Model.usr.Kind)
+
+        </div>
         <div class="form-group">
-            Aby zatwierdzić zmiany wprowadź hasło:
+            <label class="control-label col-md-2">Wprowadź hasło</label>
             <div class="col-md-10">
                 @Html.PasswordFor(model => model.password, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
             </div>
         </div>
-        
-        @Html.ActionLink("Zmień hasło", "ChangePassword", "Account")
-        @Html.ActionLink("Usuń konto", "DeleteAccount", "Account")
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Zapisz" class="btn btn-default" />
+                @Html.ActionLink("Usuń konto", "DeleteAccount", "Account", new { style="margin-left: 10px" })
+            </div>
+            <div style="margin-top: 10px" class="form-group">
+                <label class="control-label col-md-2"></label>
+                <div class="col-md-10">
+                </div>
             </div>
         </div>
     </div>

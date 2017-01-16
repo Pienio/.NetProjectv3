@@ -88,7 +88,7 @@
                 <div class="form-group">
                     <label class = "control-label col-md-2">Specjalizacje</label>
                     <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.SpecId, new SelectList(Speclist, "Key", "Name", "0"), "Choose... ", new { id = "SpecToAdd", @class = "form-control" })
+                        @Html.DropDownListFor(model => model.SpecId, new SelectList(Speclist, "Key", "Name", "0"), "Wybierz... ", new { id = "SpecToAdd", @class = "form-control" })
                         <input type="submit" value="Dodaj" onclick="ClearToDel()" class="btn btn-default" />
                     </div>
                 </div>
