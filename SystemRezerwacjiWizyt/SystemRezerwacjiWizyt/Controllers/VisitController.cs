@@ -104,8 +104,9 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             db.BeginTransaction();
             Patient pat = Session["User"] as Patient;
+            Specialization specc = db.Specializations.Find(model.SelectedSpec);
             Visit toAdd = new Visit(pat, a, model.DateToChoose[model.ChosenDate - 1].date,
-                a.Specialization[model.SelectedSpec - 1]);
+                specc);
                 a.Visits.Add(toAdd);
                 pat.Visits.Add(toAdd);
 
@@ -126,6 +127,10 @@ namespace SystemRezerwacjiWizyt.Controllers
             var a = db.Visits.Find(VisitId);
             var b = db.Doctors.Find(a.Doctor.Key);
             var c = db.Patients.Find(a.Patient.Key);
+            Visit stara = new Visit();
+            stara.Doctor = b;
+            stara.Patient = c;
+            stara.Spec = a.Spec;
             Person crt = Session["User"] as Person;
             db.BeginTransaction();
             b.Visits.Remove(a);
@@ -133,7 +138,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             db.Visits.Remove(a);
             db.Commit();
             MailService.MailServices tosend= new MailService.MailServices();
-            tosend.SendVisitDeleteNotification(a,crt.User.Kind);
+            tosend.SendVisitDeleteNotification(stara,crt.User.Kind);
             return RedirectToAction("Index", "Home");
         }
 
