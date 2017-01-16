@@ -33,7 +33,7 @@
         }
     }*@
 
-<div style="margin: 10px">
+<div style="margin: 10px; width: 100%; margin-left: auto; margin-right: auto;">
     @if (ViewBag.Message != null)
     {
         <div class="alert alert-success">@ViewBag.Message</div>
@@ -42,15 +42,38 @@
     {
         <div class="alert alert-danger">@ViewBag.Error</div>
     }
-    <div style="display: inline-block">
+
+    <div style="float: left; margin-right: 20px; width: 25%" class="panel panel-success">
+        <div class="panel-heading" style="padding-top: 5px; padding-bottom: 5px"><h4>Filtrowanie</h4></div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Search", "Home", FormMethod.Get))
+            {
+                <div class="form-group">
+                    <label class="control-label col-md-2">Specjalizacja: </label>
+                    @Html.DropDownListFor(m => m.SelSPec, new SelectList(Speclist, "Key", "Name", "0"), "Wybierz... ", new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Nazwisko: </label>
+                    @Html.TextBoxFor(m => m.Text, new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Szukaj" />
+                </div>
+                <div class="form-group">
+                    @Html.ActionLink("Resetuj filtry", "Search", "Home")
+                </div>
+            }
+        </div>
+    </div>
+    <div style="float: left; width: 65%;">
         <table>
             <thead>
-                <tr>
-                    <th>Doktor</th>
-                    <th>Specjalizacje</th>
-                    <th>Średnia ocena</th>
-                    <th>Pierwszy wolny termin</th>
-                </tr>
+            <tr>
+                <th>Doktor</th>
+                <th>Specjalizacje</th>
+                <th>Średnia ocena</th>
+                <th>Pierwszy wolny termin</th>
+            </tr>
             </thead>
             @foreach (var Doctor in Model.docs)
             {
@@ -67,18 +90,18 @@
 
                         if (value == null)
                         {
-                            <td style="text-align: center">Brak ocen</td>
+                            <td>Brak ocen</td>
                         }
                         else
                         {
-                            <td style="text-align: center">
+                            <td>
                                 @Html.ActionLink(@value, "ShowOpinions", "Opinion", new { id = @Doctor.Key }, new { target = "_blank" })
                             </td>
                         }
                     }
                     @{
                         var date = Doctor.FirstFreeSlot;
-                        <td style="text-align: center">@date.ToString("d")<br />@date.ToString("t")</td>
+                        <td>@date.ToString("d")<br />@date.ToString("t")</td>
                     }
                     @if (IsLogged && LoggedIn is Patient)
                     {
@@ -94,30 +117,11 @@
                         </td>
                     }
                 </tr>
-                        }
+            }
         </table>
     </div>
-
-    <div style="display: inline-block; float: left">
-        @using (Html.BeginForm("Search", "Home", FormMethod.Get))
-        {
-            <div class="form-group">
-                <label class="control-label col-md-2">Specjalizacja: </label>
-                @Html.DropDownListFor(m => m.SelSPec, new SelectList(Speclist, "Key", "Name", "0"), "Wybierz... ", new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                <label class="control-label col-md-2">Nazwisko: </label>
-                @Html.TextBoxFor(m => m.Text, new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Szukaj" />
-            </div>
-            <div class="form-group">
-                @Html.ActionLink("Resetuj filtry", "Search", "Home")
-            </div>
-        }
-    </div>
 </div>
+<div style="clear: both"></div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
