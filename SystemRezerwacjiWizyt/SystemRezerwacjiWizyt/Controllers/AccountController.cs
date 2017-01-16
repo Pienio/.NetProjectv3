@@ -441,7 +441,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 return View(model);
             }
             ViewBag.ReturnUrl = returnUrl;
-            var a = db.Users.Select(p => p).Where(p => p.PESEL == model.PESEL);
+            var a = db.Users.Select(p => p).Where(p => p.PESEL == model.PESEL && p.Active);
             if (a.Count() != 0)
             {
                 ViewBag.Error = "Użytkownik o podanym Peselu już istnieje";
@@ -566,17 +566,105 @@ namespace SystemRezerwacjiWizyt.Controllers
             {
                 if (a.User.Kind == DocOrPat.Doctor)
                 {
-                    var doc = db.Doctors.Select(p => p).First(p => p.User.Key == a.User.Key);
+                    //var doc = db.Doctors.Select(p => p).First(p => p.User.Key == a.User.Key);
+                    //db.BeginTransaction();
+                    //foreach (var q in doc.Visits)
+                    //{
+                    //    var patt = q.Patient;
+                    //    var patt1 = db.Patients.Find(q.Key);
+                    //    patt1.Visits.Remove(q);
+                    //    db.Visits.Remove(q);
+                    //}
+                    //db.Doctors.Remove(doc);
+                    //db.Commit();
                     db.BeginTransaction();
-                    db.Doctors.Remove(doc);
+                    IEnumerable<Visit> obw = db.Visits.Select(p => p).Where(p => p.Doctor.User.Key == a.User.Key);
+                    var doc = db.Doctors.Select(p => p).First(p => p.User.Key == a.User.Key);
+                    if (obw == null || obw.ToList().Count == 0)
+                    {
+                        
+                      
+                        db.Doctors.Remove(doc);
+
+                    }
+                    else
+                    {
+                        int ind = 0;
+                        for (int i = 0; i < doc.Visits.Count; i++)
+                        {
+                            if (doc.Visits[i].Date > DateTime.Now)
+                            {
+                               
+                                db.Visits.Remove(doc.Visits[i]);
+                                ind++;
+                            }
+                        }
+                        //obw = db.Visits.Select(p => p).Where(p => p.Doctor.User.Key == a.User.Key);
+                        if (ind==doc.Visits.Count)
+                        {
+
+
+                            db.Doctors.Remove(doc);
+
+                        }
+                        else
+                        {
+                            doc.User.Active = false;
+                        }
+                    }
                     db.Commit();
 
                 }
                 else
                 {
-                    var pat = db.Patients.Select(p => p).First(p => p.User.Key == a.User.Key);
+                    //var pat = db.Patients.Select(p => p).First(p => p.User.Key == a.User.Key);
+                    //db.BeginTransaction();
+                    //foreach (var q in pat.Visits)
+                    //{
+                    //    var docc = q.Doctor;
+                    //    var docc1 = db.Doctors.Find(q.Key);
+                    //    docc1.Visits.Remove(q);
+                    //    db.Visits.Remove(q);
+                    //}
+                    //db.Patients.Remove(pat);
+                    //db.Commit();
+
                     db.BeginTransaction();
-                    db.Patients.Remove(pat);
+                    IEnumerable<Visit> obw = db.Visits.Select(p => p).Where(p => p.Patient.User.Key == a.User.Key);
+                    var pat = db.Patients.Select(p => p).First(p => p.User.Key == a.User.Key);
+                    if (obw == null || obw.ToList().Count == 0)
+                    {
+
+
+                        db.Patients.Remove(pat);
+
+                    }
+                    else
+                    {
+                        int ind = 0;
+                        for (int i = 0; i < pat.Visits.Count; i++)
+                        {
+                            if (pat.Visits[i].Date > DateTime.Now)
+                            {
+                                ind++;
+                                db.Visits.Remove(pat.Visits[i]);
+
+                            }
+                        }
+                        //obw = db.Visits.Select(p => p).Where(p => p.Patient.User.Key == a.User.Key);
+                        if (ind==pat.Visits.Count)
+                        {
+
+
+                            db.Patients.Remove(pat);
+
+                        }
+                        else
+                        {
+                            pat.User.Active = false;
+                        }
+
+                    }
                     db.Commit();
                 }
                 Session["User"] = null;
@@ -688,7 +776,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             {
                 return View(model);
             }
-            var a = db.Users.Select(p => p).Where(p => p.PESEL == model.PESEL);
+            var a = db.Users.Select(p => p).Where(p => p.PESEL == model.PESEL&&p.Active);
             if (a.Count() != 0)
             {
                 ViewBag.Error = "Użytkownik o podanym Peselu już istnieje";
