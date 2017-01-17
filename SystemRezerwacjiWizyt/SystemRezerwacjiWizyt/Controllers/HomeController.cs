@@ -43,6 +43,10 @@ namespace SystemRezerwacjiWizyt.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SendMailToAdmin(SendMailToAdminViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
             MailServices tosend = new MailServices();
             tosend.SendMailToAdmin(model.Mail,model.Content,model.Major);

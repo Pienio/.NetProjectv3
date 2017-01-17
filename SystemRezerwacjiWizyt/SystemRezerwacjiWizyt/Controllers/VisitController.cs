@@ -115,7 +115,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             MailService.MailServices tosend = new MailService.MailServices();
             tosend.SendVisitRegistrationNotifications(a,pat, model.DateToChoose[model.ChosenDate - 1].date);
             ViewBag.Message = "Wizyta została zarejestrowana";
-            return RedirectToAction("Index", "Home", new { message = $"Wizyta u {a.User.Name} w terminie {toAdd.Date:g} została pomyślnie zarezerwowana." });
+            return RedirectToAction("Index", "Home", new { message = $"Wizyta u {a.User.Name} w terminie {toAdd.Date.ToString("dd.MM.yyyy HH:mm")} została pomyślnie zarezerwowana." });
         }
         
         public ActionResult DeleteVisit(int VisitId)
