@@ -5,6 +5,10 @@
 }
 
 <div style="margin: 10px; width: 40%; margin-left: 0;">
+    @if (ViewBag.MSG != null)
+    {
+        <div class="alert alert-danger" style="margin-top: 10px">@ViewBag.MSG</div>
+    }
     <table>
         <thead>
         <tr>
@@ -19,5 +23,5 @@
             </tr>
         }
     </table>
-    @Html.ActionLink("Dodaj nową specjalizację", "AddSpec", "Specializations", null, new { @style = "margin-top: 20px", @class ="btn btn-primary" })
+    @Html.ActionLink("Dodaj nową specjalizację", "AddSpec", "Specializations", null, new {@style = "margin-top: 20px", @class = "btn btn-primary"})
 </div>
