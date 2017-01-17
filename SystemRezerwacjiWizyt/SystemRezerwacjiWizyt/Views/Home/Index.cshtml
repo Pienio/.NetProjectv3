@@ -19,19 +19,6 @@
 @{
     var Speclist = Model.specs;
 }
-@*@{
-        bool IsLogged;
-        DatabaseAccess.Model.User LoggedIn = null;
-        if (Session["User"] == null)
-        {
-            IsLogged = false;
-        }
-        else
-        {
-            IsLogged = true;
-            LoggedIn = (DatabaseAccess.Model.User)Session["User"];
-        }
-    }*@
 
 <div style="margin: 10px; width: 100%; margin-left: auto; margin-right: auto;">
 

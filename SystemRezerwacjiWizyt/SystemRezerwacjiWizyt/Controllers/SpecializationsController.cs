@@ -12,7 +12,7 @@ namespace SystemRezerwacjiWizyt.Models
     public class SpecializationsController : Controller
     {
         private ITransactionalApplicationData db = new ApplicationDataFactory().CreateTransactionalApplicationData(false);
-        // GET: Specializations
+
         public ActionResult Index()
         {
             if (Session["User"] is Admin)
@@ -54,8 +54,8 @@ namespace SystemRezerwacjiWizyt.Models
             }
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost]
-        //  [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddSpec(Specialization model, string returnUrl)
         {

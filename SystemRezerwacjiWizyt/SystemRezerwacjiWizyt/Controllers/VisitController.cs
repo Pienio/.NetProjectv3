@@ -13,7 +13,7 @@ namespace SystemRezerwacjiWizyt.Controllers
     public class VisitController : Controller
     {
         private ITransactionalApplicationData db = new ApplicationDataFactory().CreateTransactionalApplicationData(false);
-        // GET: Visit
+
         public ActionResult AddVisit(int DoctorId)
         {
             var a = db.Doctors.Find(DoctorId);

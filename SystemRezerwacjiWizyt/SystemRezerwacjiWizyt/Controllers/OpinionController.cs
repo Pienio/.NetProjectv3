@@ -15,7 +15,6 @@ namespace SystemRezerwacjiWizyt.Controllers
 
         public ActionResult AddOpinion(long id)
         {
-            //ViewBag.ReturnUrl = returnUrl;
             var patient = (Patient)Session["User"];
             var opinion = patient.Opinions.FirstOrDefault(o => o.TargetDoctor.Key == id);
             var doctor = db.Doctors.Find(id);
