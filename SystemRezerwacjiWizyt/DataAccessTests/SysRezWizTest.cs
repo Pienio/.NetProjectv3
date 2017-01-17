@@ -209,30 +209,7 @@ namespace UnitTestProject1
             var aa = db.Doctors.Find(f);
             if(aa!=null)
                 Assert.Fail();
-            //SystemRezerwacjiWizyt.Models.RegisterDoctorViewModel newdoc = new RegisterDoctorViewModel();
-            //newdoc.doc = doc;
-            //newdoc.SpecId = 1;
-            //newdoc.PESEL = doc.User.PESEL;
-            //newdoc.Mail = doc.User.Mail;
-            //newdoc.Password = "111111";
-            //newdoc.PasswordAgain = "111111";
-            //newdoc.Name = new PersonName();
-            //newdoc.Name.Name = "asd";
-            //newdoc.Name.Surname = "dsa";
-            //var adding = SystemRezerwacjiWizyt.Controllers.AccountController
-            //var k = a.AddDoctor(doc);
-
-            //Assert.IsTrue(k);
-
-            //var c = a.SearchDoctorsList(null, "Janowski");
-
-
-            //if (c == null || c.Length == 0)
-            //    Assert.Fail();
-
-            //var dd = a.DeleteDoctor(c.First());
-            //Assert.IsTrue(dd);
-
+           
 
 
 

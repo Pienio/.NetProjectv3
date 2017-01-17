@@ -266,9 +266,16 @@ namespace SystemRezerwacjiWizyt.Controllers
                 return View(model);
             }
             ViewBag.ReturnUrl = returnUrl;
+            
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Home");
             Patient a = Session["User"] as Patient;
+             var ddd = db.Users.Select(p => p).Where(p => p.Mail == model.usr.Mail&&p.Key!=a.User.Key);
+             if (ddd.Count() != 0)
+            {
+                ViewBag.Error = "Użytkownik o podanym mail-u już istnieje.";
+                return View(model);
+            }
             if (a.User.Password != Utils.PasswordHasher.CreateHash(model.password))
             {
                 EditUserVievModel b = new EditUserVievModel();
@@ -340,7 +347,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                     model.doc.Specialization = nowaa;
                     ViewBag.Message = "Nie możesz dodać dwóch takich samych specjalizacji.";
                 }
-
+            
 
                 // model.SpecToChoose = db.Specializations.Select(p => p).ToList();
                 model.password = "";
@@ -380,9 +387,16 @@ namespace SystemRezerwacjiWizyt.Controllers
             {
                 return View(model);
             }
+           
             if (Session["User"] == null)
                 return RedirectToAction("Index", "Home");
             Doctor a = Session["User"] as Doctor;
+              var ddd = db.Users.Select(p => p).Where(p => p.Mail == model.doc.User.Mail&&p.Key!=a.User.Key);
+             if (ddd.Count() != 0)
+            {
+                ViewBag.Error = "Użytkownik o podanym mail-u już istnieje.";
+                return View(model);
+            }
             if (string.IsNullOrEmpty(model.password) ||
                 a.User.Password != SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.password))
             {
@@ -454,6 +468,12 @@ namespace SystemRezerwacjiWizyt.Controllers
             if (a.Count() != 0)
             {
                 ViewBag.Error = "Użytkownik o podanym Peselu już istnieje";
+                return View(model);
+            }
+             var ddd = db.Users.Select(p => p).Where(p => p.Mail == model.Mail);
+             if (ddd.Count() != 0)
+            {
+                ViewBag.Error = "Użytkownik o podanym mail-u już istnieje.";
                 return View(model);
             }
             // db.BeginTransaction();
@@ -545,9 +565,13 @@ namespace SystemRezerwacjiWizyt.Controllers
                 {
                     Session["User"] = db.Doctors.Select(p => p).First(p => p.User.Key == a.User.Key);
                 }
-                else
+                else if (a.User.Kind == DocOrPat.Patient)
                 {
                     Session["User"] = db.Patients.Select(p => p).First(p => p.User.Key == a.User.Key);
+                }
+                else
+                {
+                    Session["User"] = db.Admins.Select(p => p).First(p => p.User.Key == a.User.Key);
                 }
                 return RedirectToAction("Index", "Home", new { message = "Hasło zmienione pomyślnie." });
             }
@@ -793,7 +817,12 @@ namespace SystemRezerwacjiWizyt.Controllers
                 ViewBag.Error = "Użytkownik o podanym PESEL-u już istnieje.";
                 return View(model);
             }
-
+            var ddd = db.Users.Select(p => p).Where(p => p.Mail == model.Mail);
+             if (ddd.Count() != 0)
+            {
+                ViewBag.Error = "Użytkownik o podanym mail-u już istnieje.";
+                return View(model);
+            }
             if (!ModelState.IsValid)
             {
                 return View(model);
