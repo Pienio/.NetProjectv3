@@ -244,7 +244,6 @@
     <Content Include="Views\Account\_Specializations.cshtml" />
     <Content Include="Views\Visit\AddVisit.cshtml" />
     <Content Include="Views\Visit\ShowVisits.cshtml" />
-    <Content Include="Views\Visit\DeleteConfirmationVisit.cshtml" />
     <Content Include="Views\Account\EditPatient.cshtml" />
     <Content Include="Views\Account\RegisterPatientToken.cshtml" />
     <Content Include="Views\Account\RegisterDoctorToken.cshtml" />

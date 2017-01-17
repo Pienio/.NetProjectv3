@@ -44,18 +44,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @ViewBag.MSG
-                    @if (!IsLogged)
-                    {
-                        <li>@Html.ActionLink("Zaloguj", "Login", "Account")</li>
-                        <li>
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Zarejestruj się <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Pacjent", "RegisterPatient", "Account")</li>
-                                <li>@Html.ActionLink("Doktor", "RegisterDoctor", "Account")</li>
-                            </ul>
-                    </li>
-                    }
-                    else
+                    @if (IsLogged)
                     {
                         <li>
                             <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Witaj, @LoggedIn.User.Name.ToString() <span class="caret"></span></a>
@@ -63,23 +52,18 @@
                                 @if (LoggedIn is Doctor)
                                 {
                                     <li>@Html.ActionLink("Edytuj konto", "EditDoctor", "Account")</li>
-
                                 }
                                 @if (LoggedIn is Patient)
                                 {
                                     <li>@Html.ActionLink("Edytuj konto", "EditPatient", "Account")</li>
-
                                 }
                                 @if (LoggedIn is Admin)
                                 {
                                     <li>@Html.ActionLink("Prośby", "Requests", "Account")</li>
                                     <li>@Html.ActionLink("Specjalizacje", "Index", "Specializations")</li>
-
                                 }
-
                                 @if (LoggedIn is Doctor || LoggedIn is Patient)
                                 {
-
                                     <li>@Html.ActionLink("Twoje wizyty", "ShowVisits", "Visit")</li>
                                 }
                                 <li role="separator" class="divider"></li>
@@ -87,15 +71,37 @@
                                 <li>@Html.ActionLink("Wyloguj", "LogOut", "Account")</li>
                             </ul>
                         </li>
-
                     }
-                    <li>@Html.ActionLink("Wyślij e-mail do admina", "SendMailToAdmin", "Home")</li>
+                    else
+                    {
+                        <li>@Html.ActionLink("Zaloguj", "Login", "Account")</li>
+                        <li>
+                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">Zarejestruj się<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Pacjent", "RegisterPatient", "Account")</li>
+                                <li>@Html.ActionLink("Doktor", "RegisterDoctor", "Account")</li>
+                            </ul>
+                        </li>
+                    }
+                    @if (!(LoggedIn is Admin))
+                    {
+                        <li role="separator" class="nav-divider"></li>
+                        <li>@Html.ActionLink("Wiadomość do administratora", "SendMailToAdmin", "Home")</li>
+                    }
 
                 </ul>
             </div>
         </div>
     </div>
     <div class="container body-content">
+        @if (ViewBag.Message != null)
+        {
+            <div class="alert alert-success" style="margin-top: 10px">@ViewBag.Message</div>
+        }
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger" style="margin-top: 10px">@ViewBag.Error</div>
+        }
         @RenderBody()
         <hr />
     </div>

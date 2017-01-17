@@ -67,8 +67,7 @@ namespace SystemRezerwacjiWizyt.Models
                 var src = db.Specializations.Select(p => p).Where(p => p.Name == model.Name);
                 if (src.Count() != 0)
                 {
-                    ViewBag.MSG = "Istnieje już taka specjalizacja";
-
+                    ViewBag.Error = "Istnieje już taka specjalizacja.";
                     return View("Index", specs);
                 }
                 Specialization nowa = new Specialization();
@@ -78,6 +77,7 @@ namespace SystemRezerwacjiWizyt.Models
                 db.Commit();
                 specs =
                     db.Specializations.ToList();
+                ViewBag.Message = "Specjalizacja została dodana.";
                 return View("Index", specs);
             }
             return RedirectToAction("Index", "Home");

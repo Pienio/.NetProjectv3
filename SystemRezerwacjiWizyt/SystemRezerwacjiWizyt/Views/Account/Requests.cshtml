@@ -3,7 +3,7 @@
     ViewBag.Title = "Requests";
 }
 
-<h2>Requests</h2>
+<h2>Wnioski</h2>
 <body>
     <div style="margin: 10px; width: 100%; margin-left: auto; margin-right: auto;">
         <table>
@@ -19,7 +19,6 @@
                 {
                     <tr>
                         <td>@request.NewProfile.User.Name</td>
-                        <td>@request.NewProfile.User.PESEL</td>
                         <td>@request.NewProfile.User.PESEL</td>
                         <td>
                             @foreach (var Spec in request.NewProfile.Specialization)

@@ -47,7 +47,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             var a = db.Users.Select(p => p).Where(p => p.PESEL == model.Pesel && p.Password == pass && p.Active);
             if (a.Count() == 0)
             {
-                ViewBag.Error = "Nieprawidłowy Pesel lub hasło";
+                ViewBag.Error = "Nieprawidłowy PESEL lub hasło.";
                 return View();
             }
             else
@@ -60,7 +60,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                     if (docc.ProfileAccepted)
                         Session["User"] = db.Doctors.First(p => p.User.Key == c.Key);
                     else
-                        ViewBag.MSG = "Twoje konto nie zostało jeszcze zaakceptowane przez administratora";
+                        ViewBag.Error = "Twoje konto nie zostało jeszcze zaakceptowane przez administratora.";
                 }
                 else if (c.Kind == DocOrPat.Patient)
                 {
@@ -77,7 +77,7 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { error = ViewBag.Error });
 
         }
 
@@ -213,6 +213,7 @@ namespace SystemRezerwacjiWizyt.Controllers
 
                     tosend.SendRejectionMail(mail, model.Reason);
                     lista = db.Requests.Select(p => p).ToList();
+                    ViewBag.Message = "Pomyślnie odrzucono wniosek.";
                     return View("Requests", lista);
 
                 }
@@ -228,6 +229,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 // MailServices tosend = new MailServices();
                 tosend.SendEditRejectionMail(docold.User.Mail, model.Reason);
                 lista = db.Requests.Select(p => p).ToList();
+                ViewBag.Message = "Pomyślnie odrzucono wniosek.";
                 return View("Requests", lista);
             }
             else
@@ -271,6 +273,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 EditUserVievModel b = new EditUserVievModel();
                 b.usr = new User();
                 b.usr = a.User;
+                ViewBag.Error = "Niepoprawne hasło.";
                 return View(b);
             }
             db.BeginTransaction();
@@ -282,7 +285,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             db.Commit();
 
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { message="Zapisano zmiany." });
         }
 
         public ActionResult EditDoctor(string returnUrl)
@@ -334,7 +337,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 else
                 {
                     model.doc.Specialization = nowaa;
-                    ViewBag.Mess = "Nie możesz dodać dwóch takich samych specjalizacji";
+                    ViewBag.Message = "Nie możesz dodać dwóch takich samych specjalizacji.";
                 }
 
 
@@ -382,7 +385,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             if (string.IsNullOrEmpty(model.password) ||
                 a.User.Password != SystemRezerwacjiWizyt.Utils.PasswordHasher.CreateHash(model.password))
             {
-                ViewBag.Message = "Błędne hasło";
+                ViewBag.Error = "Błędne hasło.";
                 return View(model);
                 //return RedirectToAction("Index", "Home");
             }
@@ -414,7 +417,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             //Session["User"] = model.doc;
             //db.Commit();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new {message = "Zapisano zmiany."});
         }
 
         public ActionResult RegisterPatient(string returnUrl)
@@ -499,7 +502,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             Session["User"] = usr;
             MailServices tosend = new MailServices();
             //tosend.SendAcceptationMail(usr.User.Mail);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new {message = "Rejestracja przebiegła pomyślnie."});
         }
 
         public ActionResult RegisterDoctorToken(string returnUrl)
@@ -547,7 +550,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             }
 
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { message = "Hasło zmienione pomyślnie." });
         }
 
         public ActionResult DeleteAccount(string returnUrl)
@@ -673,7 +676,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 }
                 Session["User"] = null;
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { message = "Konto zostało usunięte z systemu." });
         }
 
 
@@ -740,7 +743,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 else
                 {
                     model.doc.Specialization = nowaa;
-                    ViewBag.Mess = "Nie możesz dodać dwóch takich samych specjalizacji";
+                    ViewBag.Message = "Nie możesz dodać dwóch takich samych specjalizacji.";
                 }
 
 
@@ -785,7 +788,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             var a = db.Users.Select(p => p).Where(p => p.PESEL == model.PESEL&&p.Active);
             if (a.Count() != 0)
             {
-                ViewBag.Error = "Użytkownik o podanym Peselu już istnieje";
+                ViewBag.Error = "Użytkownik o podanym PESEL-u już istnieje.";
                 return View(model);
             }
 
@@ -824,9 +827,6 @@ namespace SystemRezerwacjiWizyt.Controllers
             // return RedirectToAction("Index", "Home");
             Session["TMP"] = d;
             return RedirectToAction("RegisterDoctorToken", "Account");
-
-
-
         }
 
 
@@ -880,12 +880,12 @@ namespace SystemRezerwacjiWizyt.Controllers
                 MailServices tosend = new MailServices();
                 tosend.SendPasswordResetMail(b.Mail, newPasssword);
                 db.Commit();
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { message= " Nowe hasło zostało wysłane na podany adres mailowy. Użyj go do zalogowania się i za jego pomocą zmień hasło." });
 
             }
             db.Commit();
-            ViewBag.Message = "Nie istnieje użytkownik o takim mailu";
-            return View();
+            ViewBag.Error = "Nie istnieje użytkownik o takim mailu.";
+            return View(new PasswordResetViewModel());
         }
     }
 }

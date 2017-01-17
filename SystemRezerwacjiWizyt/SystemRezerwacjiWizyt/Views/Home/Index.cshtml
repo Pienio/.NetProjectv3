@@ -34,18 +34,11 @@
     }*@
 
 <div style="margin: 10px; width: 100%; margin-left: auto; margin-right: auto;">
-    @if (ViewBag.Message != null)
-    {
-        <div class="alert alert-success">@ViewBag.Message</div>
-    }
-    @if (ViewBag.Error != null)
-    {
-        <div class="alert alert-danger">@ViewBag.Error</div>
-    }
 
-    <div style="float: left; margin-right: 20px; width: 25%" class="panel panel-success">
+
+    <div style="float: left; margin-right: 20px; width: 25%" class="panel panel-primary">
         <div class="panel-heading" style="padding-top: 5px; padding-bottom: 5px"><h4>Filtrowanie</h4></div>
-        <div class="panel-body">
+        <div class="panel-body" style="margin-left: 10px">
             @using (Html.BeginForm("Search", "Home", FormMethod.Get))
             {
                 <div class="form-group">
@@ -56,14 +49,15 @@
                     <label class="control-label col-md-2">Nazwisko: </label>
                     @Html.TextBoxFor(m => m.Text, new { @class = "form-control" })
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Szukaj" />
+                <div class="form-group" style="float: left; margin-right: 5px">
+                    <input type="submit" value="Szukaj" class="btn btn-primary" />
                 </div>
-                <div class="form-group">
-                    @Html.ActionLink("Resetuj filtry", "Search", "Home")
+                <div class="form-group" style="float: left">
+                    @Html.ActionLink("Resetuj filtry", "Search", "Home", null, new {@class="btn btn-default"})
                 </div>
             }
         </div>
+        <div style="clear: both"></div>
     </div>
     <div style="float: left; width: 65%;">
         <table>
@@ -106,7 +100,7 @@
                     @if (IsLogged && LoggedIn is Patient)
                     {
                         <td>
-                            @Html.ActionLink("Zarezerwuj Wizyte",
+                            @Html.ActionLink("Zarezerwuj wizytę",
                                 "AddVisit",
                                 "Visit",
                                 new

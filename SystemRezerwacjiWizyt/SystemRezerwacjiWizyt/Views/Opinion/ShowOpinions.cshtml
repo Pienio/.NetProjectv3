@@ -1,16 +1,18 @@
 ﻿@model DatabaseAccess.Model.Doctor
 
-<h3>Opinie na temat lekarza: @Model.User.Name</h3>
-
+<h3 style="margin-bottom: 5px">Opinie na temat lekarza: @Model.User.Name</h3>
+<hr/>
 <div class="form-horizontal">
     @if (Model.Opinions.Any())
     {
         foreach (var op in Model.Opinions)
         {
-            <div class="form-group">
-                <h4>@op.AuthorNick</h4>
-                <p>@op.Description</p>
-                <p>Ocena: @op.Rate / 5</p>
+            <div class="list-group">
+                <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading">@op.Description</h4>
+                    <p class="list-group-item-text">Autor: @op.AuthorNick</p>
+                    <p class="list-group-item-text">Ocena: @op.Rate / 5</p>
+                </a>
             </div>
         }
     }

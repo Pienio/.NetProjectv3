@@ -117,11 +117,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             ViewBag.Message = "Wizyta została zarejestrowana";
             return RedirectToAction("Index", "Home", new { message = $"Wizyta u {a.User.Name} w terminie {toAdd.Date:g} została pomyślnie zarezerwowana." });
         }
-
-        public ActionResult DeleteConfirmationVisit(int VisitId)
-        {
-            return View(VisitId);
-        }
+        
         public ActionResult DeleteVisit(int VisitId)
         {
             var a = db.Visits.Find(VisitId);

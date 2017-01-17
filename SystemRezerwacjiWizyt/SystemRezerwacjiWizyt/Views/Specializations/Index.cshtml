@@ -1,24 +1,23 @@
 ﻿@using SystemRezerwacjiWizyt.Models
 @model List<DatabaseAccess.Model.Specialization>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Specjalizacje";
 }
 
-<h2>Index</h2>
-
-<body>
-<table>
-    <tr>
+<div style="margin: 10px; width: 40%; margin-left: 0;">
+    <table>
+        <thead>
+        <tr>
+            <th>Nazwa</th>
+        </tr>
+        </thead>
         @foreach (var a in Model)
         {
-            <td>@a.Name.ToString()</td>
-            <td>@Html.ActionLink("Usuń", "DelSpec", "Specializations",new {ID = @a.Key},null)</td>
+            <tr>
+                <td>@a.Name</td>
+                <td>@Html.ActionLink("Usuń", "DelSpec", "Specializations", new {ID = @a.Key}, null)</td>
+            </tr>
         }
-
-       
-    </tr>
-    @Html.ActionLink("Dodaj", "AddSpec", "Specializations")
-</table>
-
-
-</body>
+    </table>
+    @Html.ActionLink("Dodaj nową specjalizację", "AddSpec", "Specializations", null, new { @style = "margin-top: 20px", @class ="btn btn-primary" })
+</div>

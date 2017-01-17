@@ -1,26 +1,21 @@
 ﻿@model SystemRezerwacjiWizyt.Models.RequestRefuse
 
 @{
-    ViewBag.Title = "DeclineRequestsReason";
+    ViewBag.Title = "Przyczyna odrzucenia wniosku";
 }
-
-<h2>DeclineRequestsReason</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>RequestRefuse</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
           @Html.HiddenFor(model => model.RequestID, new { htmlAttributes = new { @class = "form-control" } })
-            
         </div>
-
         <div class="form-group">
-            @Html.LabelFor(model => model.Reason, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">Powód</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Reason, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Reason, "", new { @class = "text-danger" })
@@ -29,7 +24,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Wyślij" class="btn btn-default" />
             </div>
         </div>
     </div>

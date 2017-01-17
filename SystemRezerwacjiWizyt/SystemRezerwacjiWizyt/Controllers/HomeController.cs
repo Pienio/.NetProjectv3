@@ -46,7 +46,7 @@ namespace SystemRezerwacjiWizyt.Controllers
 
             MailServices tosend = new MailServices();
             tosend.SendMailToAdmin(model.Mail,model.Content,model.Major);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home", new { message = "Wiadomość do administratora została wysłana." });
         }
 
         public ActionResult Search(IndexHomeViewModels model)

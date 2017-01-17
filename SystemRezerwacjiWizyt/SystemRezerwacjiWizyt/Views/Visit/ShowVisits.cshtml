@@ -3,11 +3,24 @@
 @{
     ViewBag.Title = "Twoje wizyty";
 }
+<head>
+    <script type="text/javascript">
+        function confirmCancel(id)
+        {
+            var esc = window.confirm('Czy na pewno chcesz odwołać wizytę?');
+        }
+    </script>
+</head>
+<h3>@ViewBag.Title</h3>
+<div class="navbar navbar-default">
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li>@Html.ActionLink("Archiwalne", "ShowArchiwalVisits", "Visit")</li>
+            <li>@Html.ActionLink("Przyszłe", "ShowVisits", "Visit")</li>
+        </ul>
+    </div>
+</div>
 
-<h2>@ViewBag.Title</h2>
-
-@Html.ActionLink("Archiwalne","ShowArchiwalVisits","Visit");
-@Html.ActionLink("Przyszłe", "ShowVisits", "Visit");
 <table>
     <thead>
         <tr>
@@ -23,11 +36,11 @@
                 @if (Session["User"] is Patient)
                 {
                     <td>@a.Doctor.User.Name.ToString()</td>
-                        <td>@a.Spec.ToString()</td>
+                    <td>@a.Spec.ToString()</td>
                         <td>@a.Date.ToString()</td>
                     if (@a.Date >= DateTime.Now.AddHours(1))
                     {
-                        <td>@Html.ActionLink("Odwołaj", "DeleteConfirmationVisit", "Visit", new { VisitId = @a.Key }, null)</td>
+                        <td>@Html.ActionLink("Odwołaj", "DeleteVisit", "Visit", new { VisitId = @a.Key }, new { onclick= "window.confirm('Czy na pewno chcesz odwołać wizytę?')" })</td>
                     }
                     if (@a.Date < DateTime.Now)
                     {
@@ -37,14 +50,13 @@
                 else if (Session["User"] is Doctor)
                 {
                     <td>@a.Patient.User.Name.ToString()</td>
-                        <td>@a.Spec.ToString()</td>
+                    <td>@a.Spec.ToString()</td>
                         <td>@a.Date.ToString()</td>
                     if (@a.Date < DateTime.Now.AddHours(1))
                     {
-                        <td>@Html.ActionLink("Odwołaj", "DeleteConfirmationVisit", "Visit", new { VisitId = @a.Key }, null)</td>
+                        <td>@Html.ActionLink("Odwołaj", "DeleteVisit", "Visit", new { VisitId = @a.Key }, new { onclick = "window.confirm('Czy na pewno chcesz odwołać wizytę?')" })</td>
                     }
                 }
-
             </tr>
         }
     </tbody>
