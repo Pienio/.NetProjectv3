@@ -12,6 +12,9 @@
                     <th>Imię i nazwisko</th>
                     <th>PESEL</th>
                     <th>Specjalizacje</th>
+                    <th>Typ zmiany</th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -26,6 +29,10 @@
                                 @Spec.Name<br />
                             }
                         </td>
+                        @{
+                            var message = request.OldProfile == null ? "Nowa" : "Edycja";
+                            <td>@message</td>
+                        }
                         <td>
                             @Html.ActionLink("Akceptuj", // linkText
                         "AcceptRequests", // actionName
@@ -51,7 +58,7 @@
                         null)
                         </td>
                     </tr>
-                }
+                            }
             </tbody>
         </table>
     </div>

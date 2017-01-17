@@ -33,6 +33,6 @@ namespace SystemRezerwacjiWizyt.Models
         public string Name { get; set; }
         public DateTime date { get; set; }
 
-        public string See => Name + " " + date;
+        public string See => Name + " " + date.ToString("dd.MM.yyyy HH:mm");
     }
 }

@@ -96,13 +96,7 @@
 
     <input type='button' onclick='changeText2()' value='Submit' />*@
 <body>
-
-
     @ViewBag.Mess
-
-    @*<p id="demo">A Paragraph.</p>
-
-        <button id="okkkk">Try it</button>*@
 
     @using (Html.BeginForm())
     {
@@ -110,7 +104,6 @@
         @Html.AntiForgeryToken()
         <ol id="demo"></ol>
         <div class="form-horizontal">
-            <h4>EditDoctorViewModel</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 

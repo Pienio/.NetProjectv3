@@ -42,11 +42,11 @@
             <hr />
             @{
                 var week = (Week) Session["Week"];
-                <h4>Wybrany tydzień: @week.From.ToString("d") - @week.From.AddDays(6).ToString("d")</h4>
+                <h4>Wybrany tydzień: @week.From.ToString("dd.MM.yyyy") - @week.From.AddDays(6).ToString("dd.MM.yyyy")</h4>
             }
             <div style="margin-top: 15px">
-                <button class="form-control" style="display: inline-block; float: left; width: 150px" onclick="SetNextWeekTrue()">Poprzedni tydzień</button>
-                <button class="form-control" style="display: inline-block; width: 150px; margin-left: 5px" onclick="SetPrevWeekTrue()">Następny tydzień</button>
+                <button class="form-control" style="display: inline-block; float: left; width: 150px" onclick="SetPrevWeekTrue();">Poprzedni tydzień</button>
+                <button class="form-control" style="display: inline-block; width: 150px; margin-left: 5px" onclick="SetNextWeekTrue();">Następny tydzień</button>
             </div>
             <hr />
             @Html.ValidationSummary(true, "", new {@class = "text-danger"})

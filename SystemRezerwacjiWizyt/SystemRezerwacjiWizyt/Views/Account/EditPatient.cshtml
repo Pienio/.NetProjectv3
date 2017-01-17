@@ -1,14 +1,12 @@
 ﻿@model SystemRezerwacjiWizyt.Models.EditUserVievModel
 @{
-    ViewBag.Title = "EditPatient";
+    ViewBag.Title = "Etucja profilu";
 }
-<h2>EditPatient</h2>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>EditUserVievModel</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">

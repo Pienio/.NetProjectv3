@@ -95,7 +95,7 @@
                     }
                     @{
                         var date = Doctor.FirstFreeSlot;
-                        <td>@date.ToString("d")<br />@date.ToString("t")</td>
+                        <td>@date.ToString("dd.MM.yyyy")<br />@date.ToString("HH:mm")</td>
                     }
                     @if (IsLogged && LoggedIn is Patient)
                     {

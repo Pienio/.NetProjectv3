@@ -37,10 +37,10 @@
                 {
                     <td>@a.Doctor.User.Name.ToString()</td>
                     <td>@a.Spec.ToString()</td>
-                        <td>@a.Date.ToString()</td>
+                        <td>@a.Date.ToString("dd-MM-yyyy HH:mm")</td>
                     if (@a.Date >= DateTime.Now.AddHours(1))
                     {
-                        <td>@Html.ActionLink("Odwołaj", "DeleteVisit", "Visit", new { VisitId = @a.Key }, new { onclick= "window.confirm('Czy na pewno chcesz odwołać wizytę?')" })</td>
+                        <td>@Html.ActionLink("Odwołaj", "DeleteVisit", "Visit", new { VisitId = @a.Key }, new { onclick= "return window.confirm('Czy na pewno chcesz odwołać wizytę?')" })</td>
                     }
                     if (@a.Date < DateTime.Now)
                     {
@@ -54,7 +54,7 @@
                         <td>@a.Date.ToString()</td>
                     if (@a.Date < DateTime.Now.AddHours(1))
                     {
-                        <td>@Html.ActionLink("Odwołaj", "DeleteVisit", "Visit", new { VisitId = @a.Key }, new { onclick = "window.confirm('Czy na pewno chcesz odwołać wizytę?')" })</td>
+                        <td>@Html.ActionLink("Odwołaj", "DeleteVisit", "Visit", new { VisitId = @a.Key }, new { onclick = "return window.confirm('Czy na pewno chcesz odwołać wizytę?')" })</td>
                     }
                 }
             </tr>

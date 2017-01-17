@@ -127,6 +127,7 @@ namespace SystemRezerwacjiWizyt.Controllers
                 var docnew = db.Doctors.Find(a.NewProfile.Key);
                 docold.CopyFrom(docnew);
                 docold.ProfileAccepted = true;
+                db.Users.Remove(docnew.User);
                 db.Doctors.Remove(docnew);
                 db.Requests.Remove(a);
                 db.Commit();
@@ -402,6 +403,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             db.Requests.Add(nowy);
             db.Commit();
             Session["User"] = null;
+
             //Tu sie dobrze edytowało
             //db.BeginTransaction();
             //var k = db.Doctors.Select(p=>p).First(p => p.Key==a.Key);
@@ -417,7 +419,7 @@ namespace SystemRezerwacjiWizyt.Controllers
             //Session["User"] = model.doc;
             //db.Commit();
 
-            return RedirectToAction("Index", "Home", new {message = "Zapisano zmiany."});
+            return RedirectToAction("Index", "Home", new {message = "Wysłano prośbę o edycję konta do administratora. O jej rozpatrzeniu zostaniesz powiadomiony mailowo, po czym będziesz mógł zalogować się na swoje konto."});
         }
 
         public ActionResult RegisterPatient(string returnUrl)
@@ -547,10 +549,10 @@ namespace SystemRezerwacjiWizyt.Controllers
                 {
                     Session["User"] = db.Patients.Select(p => p).First(p => p.User.Key == a.User.Key);
                 }
+                return RedirectToAction("Index", "Home", new { message = "Hasło zmienione pomyślnie." });
             }
-
-
-            return RedirectToAction("Index", "Home", new { message = "Hasło zmienione pomyślnie." });
+            ViewBag.Error = "Stare hasło jest nieprawidłowe.";
+            return View();
         }
 
         public ActionResult DeleteAccount(string returnUrl)
